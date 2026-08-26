@@ -1,0 +1,28 @@
+generated: '2026-08-26'
+method: generated
+source: >-
+  Authored by the API Evangelist enrichment pipeline against real operationIds in
+  openapi/nikang-therapeutics-*-openapi.yml, verified against live anonymous responses from
+  https://www.nikangtx.com/wp-json on 2026-08-26. Searched www.nikangtx.com and GitHub for
+  provider-published skills or an AGENTS.md first; none exists.
+note: >-
+  Three packaged Agent Skills over the NiKang Therapeutics content API. Every operationId referenced
+  below appears verbatim in the specs in openapi/ — none was invented. All three are read-only, in
+  line with the surface: there is no anonymous write path, so no skill can take an action that would
+  need reversing.
+skills:
+- name: nikang-therapeutics-track-clinical-news
+  file: nikang-therapeutics-track-clinical-news.md
+  api: nikang-therapeutics:nikang-therapeutics-posts-api
+  operations: [listPosts, getPost, listCategories]
+  summary: Detect new NiKang press releases and clinical data announcements since a prior check.
+- name: nikang-therapeutics-map-leadership
+  file: nikang-therapeutics-map-leadership.md
+  api: nikang-therapeutics:nikang-therapeutics-team-api
+  operations: [listTeamMembers, getTeamMember, listTeamCategories, listMedia]
+  summary: Build a structured roster of the board and officers with biographies and headshots.
+- name: nikang-therapeutics-extract-pipeline
+  file: nikang-therapeutics-extract-pipeline.md
+  api: nikang-therapeutics:nikang-therapeutics-pages-api
+  operations: [listPages, getPage, searchContent, listPosts]
+  summary: Retrieve the drug pipeline from the company's own page and corroborate it against dated news.

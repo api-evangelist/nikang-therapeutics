@@ -1,0 +1,143 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  openapi/nikang-therapeutics-*-openapi.yml plus live response headers and error bodies observed
+  anonymously against https://www.nikangtx.com/wp-json on 2026-08-26.
+note: >-
+  Cross-cutting request/response semantics of the NiKang Therapeutics content API. NiKang publishes no
+  API conventions documentation of its own; everything below is the WordPress REST contract as it is
+  actually deployed here, read off the route index and confirmed against live responses. Idempotency
+  is deliberately NOT claimed and no `Idempotency` pointer is emitted in apis.yml — this deployment
+  exposes no idempotency key, no request-deduplication contract and no anonymous write surface at all.
+authentication:
+  style: none
+  detail: >-
+    No credentials required and none accepted for the catalogued surface; the /wp-json index reports
+    an empty authentication array. See authentication/nikang-therapeutics-authentication.yml.
+pagination:
+  style: page-number
+  params:
+    page: Current page of the collection, 1-based.
+    per_page: Items per page. Minimum 1, maximum 100, default 10.
+    offset: Alternative absolute offset into the result set (post-like collections only).
+  response_headers:
+    X-WP-Total: Total number of matching items.
+    X-WP-TotalPages: Total number of pages available at the current per_page.
+  link_header: >-
+    RFC 8288 Link header carrying rel="next" and rel="prev". Observed verbatim on
+    /wp/v2/posts?per_page=2 as
+    <https://www.nikangtx.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next".
+  cors_exposure: >-
+    Access-Control-Expose-Headers advertises X-WP-Total, X-WP-TotalPages and Link, so a browser client
+    can read the pagination headers cross-origin.
+  bounds_error: >-
+    per_page above 100 returns 400 rest_invalid_param with a per-parameter details block. The value is
+    rejected, not clamped — verified on per_page=200.
+field_selection:
+  supported: true
+  params:
+    _fields: Comma-separated allow-list of top-level response fields.
+    _embed: Inline embeddable resources (author, featured media, terms) under _embedded.
+    _envelope: Wrap body, status and headers in a single JSON envelope.
+  context:
+    param: context
+    values: [view, embed, edit]
+    detail: >-
+      Anonymously only `view` and `embed` return data. `edit` requires an authenticated user.
+sorting_and_filtering:
+  order: asc | desc — default desc on post-like collections, asc on term collections.
+  orderby: >-
+    Per-collection enum. Post-like: author, date, id, include, modified, parent, relevance, slug,
+    include_slugs, title (pages add menu_order). Terms: id, include, name, slug, include_slugs,
+    term_group, description, count.
+  date_windows: after, before, modified_after, modified_before (ISO 8601).
+  identity: include / exclude / slug.
+  full_text: >-
+    `search`, with `search_columns` (post_title, post_content, post_excerpt) and
+    `search_semantics: exact`.
+  taxonomy: >-
+    categories, categories_exclude, tags, tags_exclude on posts; dt_team_category and
+    dt_team_category_exclude on dt_team; tax_relation (AND | OR) on both.
+  cross_type: >-
+    /wp/v2/search is the only route that spans content types; scope it with `type` (post | term |
+    post-format) and `subtype` (post, page, dt_team, wpb_gutenberg_param, category, post_tag,
+    dt_team_category, any).
+metadata:
+  field: meta
+  detail: >-
+    A `meta` object is present on post-like resources but only registered meta keys are exposed; no
+    custom keys are surfaced anonymously on this deployment.
+  extensions_observed:
+  - acf — an Advanced Custom Fields payload is exposed on posts and on dt_team objects. It is present
+    on every object sampled on 2026-08-26 and empty on all of them, so ACF is installed and
+    REST-exposed but is not currently carrying pipeline or people data.
+  - cp_meta_data — a plugin-added meta bag observed on posts and dt_team objects.
+  - class_list — the CSS class list WordPress would render for the object.
+request_tracing:
+  request_id_header: null
+  detail: >-
+    No provider request identifier. Cloudflare returns a cf-ray value on every response, which is an
+    edge trace token, not an application-level correlation id a consumer can quote back to NiKang.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  detail: >-
+    Version is carried in the route namespace (wp/v2, oembed/1.0, and the plugin namespaces). NiKang
+    does not version this surface itself; it moves when WordPress core, the The7 theme and the
+    installed plugins move. See lifecycle/nikang-therapeutics-lifecycle.yml.
+error_envelope:
+  format: wordpress-rest
+  rfc9457: false
+  content_type: application/json
+  shape: '{ code: string, message: string, data: { status: int, params?: object, details?: object } }'
+  detail: >-
+    Not RFC 9457 problem+json — there is no `type` URI and no application/problem+json media type.
+    See errors/nikang-therapeutics-problem-types.yml.
+rate_limiting:
+  signaled: false
+  headers: []
+  detail: >-
+    No RateLimit-* or X-RateLimit-* headers are returned on /wp-json responses, and no limit is
+    documented anywhere. There is an unsignalled edge control: a non-browser User-Agent was answered
+    with a Cloudflare "Attention Required!" challenge page mid-pass on /wp-json, then 200 again from a
+    browser User-Agent. robots.txt advertises Crawl-delay: 10. See
+    rate-limits/nikang-therapeutics-rate-limits.yml.
+caching:
+  cache_control: 'max-age=600, must-revalidate on /wp-json collection responses'
+  headers_observed: [x-cacheable, x-cache, x-cache-group, cf-cache-status, last-modified]
+  detail: >-
+    WP Engine object cache (x-cacheable: SHORT) in front of the origin, Cloudflare in front of that.
+    Conditional requests are possible via Last-Modified; no ETag is returned.
+indexing:
+  x_robots_tag: noindex
+  detail: >-
+    Every /wp-json response carries x-robots-tag: noindex. The content is public and callable but the
+    provider has asked search engines not to index the API representation of it.
+idempotency:
+  supported: na
+  header: null
+  detail: >-
+    `na`, not `false`: the anonymous surface is read-only, so there is no write to make idempotent.
+    Every catalogued operation is a GET and therefore idempotent by HTTP method alone, which is not an
+    idempotency contract and is not claimed as one.
+dry_run_mode:
+  supported: na
+  detail: No write surface, so there is nothing to rehearse.
+reversibility:
+  grade: na
+  applicable: false
+  detail: >-
+    The anonymous NiKang Therapeutics content API has no write surface: POST, PUT, PATCH and DELETE
+    are registered on the post-like and term routes but every one requires an authenticated WordPress
+    user with the matching capability, and no credential is obtainable by the public. An agent calling
+    this API cannot take an action that would need taking back, so reversibility does not apply and no
+    reversal window is asserted. This is an honest `na`, not a zero.
+  write_operations: []
+  reversal_operations: []
+cross_links:
+  authentication: authentication/nikang-therapeutics-authentication.yml
+  errors: errors/nikang-therapeutics-problem-types.yml
+  lifecycle: lifecycle/nikang-therapeutics-lifecycle.yml
+  data_model: data-model/nikang-therapeutics-data-model.yml
+  conformance: conformance/nikang-therapeutics-conformance.yml
+  rate_limits: rate-limits/nikang-therapeutics-rate-limits.yml

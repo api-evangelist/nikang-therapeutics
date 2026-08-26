@@ -1,0 +1,32 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  Searched npm (registry.npmjs.org search API), PyPI, GitHub repository search and the GitHub org
+  namespace on 2026-08-26, plus www.nikangtx.com for any SDK, client library or download link.
+package_count: 0
+packages: []
+note: >-
+  NiKang Therapeutics publishes no client libraries. Probed and recorded on 2026-08-26: an npm registry
+  search for "nikang" returned total 0; https://pypi.org/pypi/nikang/json returned 404; a GitHub
+  repository search for "nikang therapeutics" returned total_count 0; https://api.github.com/orgs/nikangtx
+  returned 404, so there is no GitHub organisation. No SDK, CLI, code sample or download link appears
+  anywhere on www.nikangtx.com. NO `SDKs` pointer is emitted in apis.yml, because there is no SDK.
+  Consumers of the catalogued content API use a plain HTTP client, or one of the many third-party
+  WordPress REST clients, none of which is first-party to NiKang and none of which is listed here.
+probes:
+- registry: npm
+  query: https://registry.npmjs.org/-/v1/search?text=nikang
+  status: 200
+  result: 'total: 0'
+- registry: pypi
+  query: https://pypi.org/pypi/nikang/json
+  status: 404
+  result: not found
+- registry: github
+  query: https://api.github.com/search/repositories?q=nikang+therapeutics
+  status: 200
+  result: 'total_count: 0'
+- registry: github
+  query: https://api.github.com/orgs/nikangtx
+  status: 404
+  result: no organisation

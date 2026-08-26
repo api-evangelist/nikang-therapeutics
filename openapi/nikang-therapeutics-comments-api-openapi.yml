@@ -1,0 +1,347 @@
+openapi: 3.2.0
+info:
+  title: NiKang Therapeutics Comments API
+  version: wp/v2
+  summary: Comment collection — registered and reachable, but empty.
+  description: 'The read-only content surface NiKang Therapeutics exposes at https://www.nikangtx.com/wp-json. NiKang
+    Therapeutics is a clinical-stage biotechnology company in Wilmington, Delaware, founded in 2017, discovering
+    small molecule oncology medicines against difficult-to-drug targets (HIF2α, CDK2, CDK2/4, KRAS G12D) by structure-based
+    drug design. It runs no developer program and markets no product API. This document covers the `comment` collection.
+    It is registered and answers anonymously with HTTP 200, but no object on this deployment carries comments —
+    X-WP-Total: 0 on 2026-08-26. It is catalogued because it is part of the reachable surface, not because it carries
+    data.'
+  contact:
+    name: NiKang Therapeutics
+    url: https://www.nikangtx.com/
+    email: info@nikangtx.com
+  license:
+    name: All rights reserved — content is NiKang Therapeutics'; this description is an API Evangelist derivation.
+    url: https://www.nikangtx.com/terms-of-use/
+  termsOfService: https://www.nikangtx.com/terms-of-use/
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route
+    index at https://www.nikangtx.com/wp-json/ (210 routes across 17 namespaces) and verified against live anonymous
+    responses on 2026-08-26. Every query parameter below appears verbatim in that route index''s `args` block for
+    the endpoint it is attached to, and every collection count quoted in a description was read from the `X-WP-Total`
+    response header on that date. NiKang Therapeutics publishes no OpenAPI, no developer portal, no API reference
+    and no developer program; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines
+    the wp/v2 contract. The deployment is WP Engine behind Cloudflare, the theme is The7, and every /wp-json response
+    carries `x-robots-tag: noindex`. Routes that returned 401 anonymously (/wp/v2/users, /wp/v2/settings, /wp/v2/block-types,
+    wp-abilities/v1, wp-site-health/v1) and every write method are deliberately excluded. Nothing here was obtained
+    with credentials.'
+servers:
+- url: https://www.nikangtx.com/wp-json
+  description: Production content API (WP Engine origin behind Cloudflare)
+tags:
+- name: comments
+  description: Comments.
+paths:
+  /wp/v2/comments:
+    get:
+      tags:
+      - comments
+      operationId: listComments
+      summary: List comments
+      description: 'Returns approved comments. Empty on this deployment (X-WP-Total: 0). Several parameters — author,
+        author_exclude, author_email, status and type — are declared in the route index but the index itself annotates
+        them ''Requires authorization'', so they are not usable anonymously.'
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: after
+        in: query
+        schema:
+          type: string
+        description: Limit response to comments published after a given ISO8601 compliant date.
+      - name: author
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to comments assigned to specific user IDs. Requires authorization.
+      - name: author_exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ensure result set excludes comments assigned to specific user IDs. Requires authorization.
+      - name: author_email
+        in: query
+        schema:
+          type: string
+        description: Limit result set to that from a specific author email. Requires authorization.
+      - name: before
+        in: query
+        schema:
+          type: string
+        description: Limit response to comments published before a given ISO8601 compliant date.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - date
+          - date_gmt
+          - id
+          - include
+          - post
+          - parent
+          - type
+          default: date_gmt
+        description: Sort collection by comment attribute.
+      - name: parent
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to comments of specific parent IDs.
+      - name: parent_exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ensure result set excludes specific parent IDs.
+      - name: post
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to comments assigned to specific post IDs.
+      - name: status
+        in: query
+        schema:
+          type: string
+          default: approve
+        description: Limit result set to comments assigned a specific status. Requires authorization.
+      - name: type
+        in: query
+        schema:
+          type: string
+          default: comment
+        description: Limit result set to comments assigned a specific type. Requires authorization.
+      - name: password
+        in: query
+        schema:
+          type: string
+        description: The password for the post if it is password protected.
+      - $ref: '#/components/parameters/Fields'
+      - $ref: '#/components/parameters/Embed'
+      responses:
+        '200':
+          description: A page of comments; empty on this deployment.
+          headers:
+            X-WP-Total:
+              description: Total number of matching items.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 Link header carrying rel="next" and rel="prev".
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '400':
+          description: 'Invalid parameter. Observed verbatim on per_page=200: rest_invalid_param with a per-parameter
+            details block.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/comments/{id}:
+    get:
+      tags:
+      - comments
+      operationId: getComment
+      summary: Get a single comment
+      parameters:
+      - $ref: '#/components/parameters/ResourceId'
+      - $ref: '#/components/parameters/Context'
+      - name: password
+        in: query
+        description: The password for the parent post if it is password protected.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A single comment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '404':
+          description: No route matched, or the resource id does not exist (rest_no_route / rest_post_invalid_id).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  parameters:
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in response. Anonymously only
+        `view` and `embed` return data — `edit` requires an authenticated user.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in result set. Values above 100 return 400 rest_invalid_param;
+        the bound is not clamped.
+      schema:
+        type: integer
+        default: 10
+        minimum: 1
+        maximum: 100
+    Fields:
+      name: _fields
+      in: query
+      description: Comma-separated allow-list of top-level response fields to return.
+      schema:
+        type: string
+    Embed:
+      name: _embed
+      in: query
+      description: Inline embeddable resources (author, featured media, terms) under _embedded.
+      schema:
+        type: string
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the resource.
+      schema:
+        type: integer
+  schemas:
+    Comment:
+      type: object
+      description: A comment. No instance exists on this deployment; the shape is the WordPress core contract as
+        declared by the route index.
+      properties:
+        id:
+          type: integer
+        post:
+          type: integer
+        parent:
+          type: integer
+        author:
+          type: integer
+        author_name:
+          type: string
+        author_url:
+          type: string
+          format: uri
+        date:
+          type: string
+          format: date-time
+        date_gmt:
+          type: string
+          format: date-time
+        content:
+          type: object
+          properties:
+            rendered:
+              type: string
+          description: WordPress rendered-content object.
+        link:
+          type: string
+          format: uri
+        status:
+          type: string
+        type:
+          type: string
+        author_avatar_urls:
+          type: object
+        meta:
+          type: object
+        _links:
+          type: object
+    Error:
+      type: object
+      description: WordPress REST error envelope. Not RFC 9457 problem+json — there is no `type` URI and the media
+        type is application/json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_invalid_param, rest_post_invalid_id, rest_no_route,
+            rest_forbidden.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: Per-parameter validation messages (400 only).
+            details:
+              type: object
+              description: Per-parameter structured detail with its own code/message (400 only).
+      required:
+      - code
+      - message
+      - data

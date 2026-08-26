@@ -1,23 +1,348 @@
 aid: nikang-therapeutics
-name: Nikang Therapeutics
-description: 'Nikang Therapeutics is a company surfaced via the API Evangelist harvest backlog (source:
-  secondary-market) and added to the network as a stub for full-pipeline profiling.'
+name: NiKang Therapeutics
+description: >-
+  NiKang Therapeutics is a clinical-stage biotechnology company headquartered at 200 Powder Mill Road,
+  Building E500, Wilmington, Delaware, founded in 2017 to discover and develop innovative small molecule
+  medicines that help patients fight cancer. The company works from deep insights into disease biology and
+  molecular pathways and applies structure-based drug design to targets long considered difficult to drug,
+  spanning both inhibitor and targeted-protein-degradation modalities. Its lead programme, NKT2152, is an
+  orally bioavailable allosteric HIF2alpha inhibitor in Phase 1/2 for clear cell renal cell carcinoma, VHL
+  disease and other solid tumours; NKT3964 is a first-in-class selective CDK2 degrader in Phase 1 for advanced
+  or metastatic solid tumours; NKT5097 is a first-in-class dual CDK2/4 degrader, also in Phase 1; and a KRAS
+  G12D small molecule programme sits in discovery and IND-enabling work. NiKang raised a $10 million Series A
+  in December 2017, a $50 million Series B in September 2020 and a $200 million Series C in May 2021, and has
+  partnered its chemistry with Erasca on SHP2 and with Pfizer, Hansoh and Roche on HIF2. NiKang Therapeutics
+  runs no developer program and publishes no product API, developer portal, API reference or machine-readable
+  specification of its own. The only machine-readable surface reachable without credentials is the WordPress
+  REST content API behind www.nikangtx.com, which is catalogued here — 210 registered routes across 17
+  namespaces, of which the anonymously readable read-only content families are described in openapi/.
+image: https://www.nikangtx.com/wp-content/uploads/2023/10/nikang-logo-footer.png
 url: https://raw.githubusercontent.com/api-evangelist/nikang-therapeutics/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
-specificationVersion: '0.20'
+x-tier: profiled
+x-tier-reason: enriched
+specificationVersion: '0.23'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
 - Company
-apis: []
+- Biotechnology
+- Pharmaceuticals
+- Oncology
+- Precision Medicine
+- Drug Discovery
+- Targeted Protein Degradation
+- Clinical Trials
+- Life Sciences
+- content-api
+tags_raw:
+- Company
+- biotechnology
+- pharmaceuticals
+- oncology
+- precision-medicine
+- drug-discovery
+- targeted-protein-degradation
+- clinical-trials
+- life-sciences
+- content-api
+apis:
+- aid: nikang-therapeutics:nikang-therapeutics-posts-api
+  name: NiKang Therapeutics Posts API
+  description: >-
+    News archive — press releases, clinical data announcements and scientific presentations. Sixteen posts
+    published at harvest time, all in the `news` category.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://www.nikangtx.com/wp-json
+  tags:
+  - Posts
+  tags_raw:
+  - posts
+  properties:
+  - type: OpenAPI
+    url: openapi/nikang-therapeutics-posts-api-openapi.yml
+  - type: Overlay
+    url: overlays/nikang-therapeutics-content-overlay.yaml
+  - type: Authentication
+    url: authentication/nikang-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/nikang-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/nikang-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/nikang-therapeutics-data-model.yml
+  - type: RateLimits
+    url: rate-limits/nikang-therapeutics-rate-limits.yml
+- aid: nikang-therapeutics:nikang-therapeutics-pages-api
+  name: NiKang Therapeutics Pages API
+  description: >-
+    Corporate pages — about us, science and pipeline, news, careers, jobs, privacy policy and terms of use.
+    Nine pages published at harvest time.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://www.nikangtx.com/wp-json
+  tags:
+  - Pages
+  tags_raw:
+  - pages
+  properties:
+  - type: OpenAPI
+    url: openapi/nikang-therapeutics-pages-api-openapi.yml
+  - type: Overlay
+    url: overlays/nikang-therapeutics-content-overlay.yaml
+  - type: Authentication
+    url: authentication/nikang-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/nikang-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/nikang-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/nikang-therapeutics-data-model.yml
+  - type: RateLimits
+    url: rate-limits/nikang-therapeutics-rate-limits.yml
+- aid: nikang-therapeutics:nikang-therapeutics-team-api
+  name: NiKang Therapeutics Team API
+  description: >-
+    The7 theme `dt_team` custom post type carrying NiKang's named people — ten published at harvest time,
+    split by the dt_team_category taxonomy into Board (7) and Officers (2). The only route family on the
+    deployment that is specific to NiKang rather than WordPress core.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://www.nikangtx.com/wp-json
+  tags:
+  - Team
+  tags_raw:
+  - team
+  properties:
+  - type: OpenAPI
+    url: openapi/nikang-therapeutics-team-api-openapi.yml
+  - type: Overlay
+    url: overlays/nikang-therapeutics-content-overlay.yaml
+  - type: Authentication
+    url: authentication/nikang-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/nikang-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/nikang-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/nikang-therapeutics-data-model.yml
+  - type: RateLimits
+    url: rate-limits/nikang-therapeutics-rate-limits.yml
+- aid: nikang-therapeutics:nikang-therapeutics-media-api
+  name: NiKang Therapeutics Media API
+  description: >-
+    Media library — logos, leadership headshots, pipeline graphics and press assets. Sixty-seven attachments
+    present at harvest time.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://www.nikangtx.com/wp-json
+  tags:
+  - Media
+  tags_raw:
+  - media
+  properties:
+  - type: OpenAPI
+    url: openapi/nikang-therapeutics-media-api-openapi.yml
+  - type: Overlay
+    url: overlays/nikang-therapeutics-content-overlay.yaml
+  - type: Authentication
+    url: authentication/nikang-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/nikang-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/nikang-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/nikang-therapeutics-data-model.yml
+  - type: RateLimits
+    url: rate-limits/nikang-therapeutics-rate-limits.yml
+- aid: nikang-therapeutics:nikang-therapeutics-taxonomy-api
+  name: NiKang Therapeutics Taxonomy API
+  description: >-
+    Categories, tags and team categories, plus the taxonomy registry. Three post categories are registered
+    (`news` with 16 posts, `timeline` and `uncategorized` both empty); the post_tag taxonomy is registered but
+    empty; dt_team_category holds Board and Officers.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://www.nikangtx.com/wp-json
+  tags:
+  - Taxonomy
+  tags_raw:
+  - taxonomy
+  properties:
+  - type: OpenAPI
+    url: openapi/nikang-therapeutics-taxonomy-api-openapi.yml
+  - type: Overlay
+    url: overlays/nikang-therapeutics-content-overlay.yaml
+  - type: Authentication
+    url: authentication/nikang-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/nikang-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/nikang-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/nikang-therapeutics-data-model.yml
+  - type: RateLimits
+    url: rate-limits/nikang-therapeutics-rate-limits.yml
+- aid: nikang-therapeutics:nikang-therapeutics-search-api
+  name: NiKang Therapeutics Search API
+  description: >-
+    Cross-content search across every published object — posts, pages, dt_team members and terms — in one
+    call. Returned six matches for `cdk2` at harvest time.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://www.nikangtx.com/wp-json
+  tags:
+  - Search
+  tags_raw:
+  - search
+  properties:
+  - type: OpenAPI
+    url: openapi/nikang-therapeutics-search-api-openapi.yml
+  - type: Overlay
+    url: overlays/nikang-therapeutics-content-overlay.yaml
+  - type: Authentication
+    url: authentication/nikang-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/nikang-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/nikang-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/nikang-therapeutics-data-model.yml
+  - type: RateLimits
+    url: rate-limits/nikang-therapeutics-rate-limits.yml
+- aid: nikang-therapeutics:nikang-therapeutics-discovery-api
+  name: NiKang Therapeutics Discovery API
+  description: >-
+    Route, post-type, taxonomy and status discovery documents. The /wp-json index publishes the full
+    210-route table across 17 namespaces and is the machine-readable contract this whole profile was
+    derived from.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://www.nikangtx.com/wp-json
+  tags:
+  - Discovery
+  tags_raw:
+  - discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/nikang-therapeutics-discovery-api-openapi.yml
+  - type: Overlay
+    url: overlays/nikang-therapeutics-content-overlay.yaml
+  - type: Authentication
+    url: authentication/nikang-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/nikang-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/nikang-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/nikang-therapeutics-data-model.yml
+  - type: RateLimits
+    url: rate-limits/nikang-therapeutics-rate-limits.yml
+- aid: nikang-therapeutics:nikang-therapeutics-comments-api
+  name: NiKang Therapeutics Comments API
+  description: >-
+    Comment collection. Registered and anonymously reachable, but empty — no object on this deployment
+    carries comments.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://www.nikangtx.com/wp-json
+  tags:
+  - Comments
+  tags_raw:
+  - comments
+  properties:
+  - type: OpenAPI
+    url: openapi/nikang-therapeutics-comments-api-openapi.yml
+  - type: Overlay
+    url: overlays/nikang-therapeutics-content-overlay.yaml
+  - type: Authentication
+    url: authentication/nikang-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/nikang-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/nikang-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/nikang-therapeutics-data-model.yml
+  - type: RateLimits
+    url: rate-limits/nikang-therapeutics-rate-limits.yml
+- aid: nikang-therapeutics:nikang-therapeutics-oembed-api
+  name: NiKang Therapeutics oEmbed API
+  description: >-
+    oEmbed 1.0 provider endpoint for www.nikangtx.com URLs. Verified live and anonymous — returns
+    provider_name "Nikang Therapeutics" for the site root.
+  humanURL: https://oembed.com/
+  baseURL: https://www.nikangtx.com/wp-json
+  tags:
+  - oEmbed
+  tags_raw:
+  - oembed
+  properties:
+  - type: OpenAPI
+    url: openapi/nikang-therapeutics-oembed-api-openapi.yml
+  - type: Overlay
+    url: overlays/nikang-therapeutics-content-overlay.yaml
+  - type: Authentication
+    url: authentication/nikang-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/nikang-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/nikang-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/nikang-therapeutics-data-model.yml
+  - type: RateLimits
+    url: rate-limits/nikang-therapeutics-rate-limits.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/nikang-therapeutics-domain-security.yml
 - type: Website
+  url: https://www.nikangtx.com/
+- type: About
+  url: https://www.nikangtx.com/about-us/
+- type: Pipeline
+  url: https://www.nikangtx.com/science-and-pipeline/
+- type: News
+  url: https://www.nikangtx.com/news/
+- type: BlogRSS
+  url: https://www.nikangtx.com/feed/
+- type: Careers
+  url: https://www.nikangtx.com/careers/
+- type: Jobs
+  url: https://www.nikangtx.com/jobs/
+- type: PrivacyPolicy
+  url: https://www.nikangtx.com/privacy-policy-statement/
+- type: TermsOfService
+  url: https://www.nikangtx.com/terms-of-use/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/nikang-therapeutics-inc
+- type: SecondaryMarket
   url: https://forgeglobal.com/nikang-therapeutics_stock/
+- type: Overlay
+  url: overlays/nikang-therapeutics-content-overlay.yaml
+- type: Authentication
+  url: authentication/nikang-therapeutics-authentication.yml
+- type: Conventions
+  url: conventions/nikang-therapeutics-conventions.yml
+- type: Conformance
+  url: conformance/nikang-therapeutics-conformance.yml
+- type: ErrorCatalog
+  url: errors/nikang-therapeutics-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/nikang-therapeutics-lifecycle.yml
+- type: DataModel
+  url: data-model/nikang-therapeutics-data-model.yml
+- type: RateLimits
+  url: rate-limits/nikang-therapeutics-rate-limits.yml
+- type: Plans
+  url: plans/nikang-therapeutics-plans-pricing.yml
+- type: Packages
+  url: packages/nikang-therapeutics-packages.yml
+- type: MCPServer
+  url: mcp/nikang-therapeutics-mcp.yml
+- type: LLMsTxt
+  url: llms/nikang-therapeutics-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 27
+  pass: local-v1

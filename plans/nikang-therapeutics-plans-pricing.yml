@@ -1,0 +1,21 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  Searched www.nikangtx.com on 2026-08-26 for a pricing, plans, developer, signup or API access page.
+  The site has four navigation destinations — About us, Science & Pipeline, News, Careers — and no
+  commercial or developer surface of any kind. https://www.nikangtx.com/wp-json is served anonymously
+  with no key, no quota and no billing relationship.
+plan_count: 0
+plans: []
+note: >-
+  NiKang Therapeutics sells no API and offers no plans, tiers, free trial, quota or contact-sales
+  route to API access. This is not a "contact us" enterprise gate — there is nothing to contact anyone
+  about. The company is a pre-commercial clinical-stage drug developer whose revenue model is drug
+  development and partnership, not software; its business-development address (BDRequests@nikangtx.com)
+  concerns therapeutic assets, not data access. The catalogued content API is a byproduct of the
+  corporate website being WordPress, and it is free and anonymous because nobody is charging for it.
+commercial_model: none
+free_anonymous_access: true
+cross_links:
+  rate_limits: rate-limits/nikang-therapeutics-rate-limits.yml
+  authentication: authentication/nikang-therapeutics-authentication.yml

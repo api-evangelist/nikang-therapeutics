@@ -1,0 +1,53 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Live anonymous responses from https://www.nikangtx.com/wp-json observed 2026-08-26, plus
+  https://www.nikangtx.com/robots.txt. The www.nikangtx.com site was searched for a published limits
+  or fair-use policy; none exists.
+limit_count: 0
+note: >-
+  NiKang Therapeutics documents no rate limits, and the API signals none. This is an honest zero, not
+  an unlimited API: there IS an unsignalled edge control in front of this surface, it just does not
+  announce itself in a header a client can read.
+documented_limits: []
+response_headers:
+  ratelimit_standard: []
+  x_ratelimit: []
+  retry_after: false
+  detail: >-
+    No RateLimit-*, no X-RateLimit-* and no Retry-After header was returned on any /wp-json response
+    during this pass. A client has no runtime signal of remaining budget and no server-supplied backoff
+    hint.
+exhaustion_status: null
+observed_controls:
+- control: Cloudflare bot/UA challenge
+  status: 403
+  signalled: false
+  detail: >-
+    A non-browser User-Agent was answered mid-pass with a "Attention Required! | Cloudflare" HTML
+    interstitial instead of JSON; the same URL returned 200 JSON immediately afterwards with a browser
+    User-Agent. This is a User-Agent and reputation control at the edge, not a counted quota, and it
+    returns HTML with no machine-readable error code. It is the only throttling behaviour actually
+    observed.
+- control: robots.txt crawl delay
+  status: 200
+  signalled: true
+  value: 'Crawl-delay: 10'
+  detail: >-
+    https://www.nikangtx.com/robots.txt advertises Crawl-delay: 10 for all user agents. It is a
+    crawler-etiquette request, not an enforced API limit, but it is the only number NiKang publishes
+    about acceptable request rate. Honouring 1 request per 10 seconds keeps a consumer well inside
+    whatever the edge enforces.
+- control: WP Engine + Cloudflare caching
+  signalled: true
+  detail: >-
+    /wp-json collection responses return `cache-control: max-age=600, must-revalidate` with
+    `x-cacheable: SHORT`. Respecting the 10-minute cache window is the practical way to keep request
+    volume low; the content changes at most a few times a year.
+guidance_for_agents: >-
+  Send a real browser User-Agent, honour Crawl-delay: 10, cache for the advertised 600 seconds, and
+  treat any text/html response body as a transient edge challenge rather than an API error — the
+  WordPress error envelope always carries a `code` field, the Cloudflare page does not.
+cross_links:
+  conventions: conventions/nikang-therapeutics-conventions.yml
+  errors: errors/nikang-therapeutics-problem-types.yml

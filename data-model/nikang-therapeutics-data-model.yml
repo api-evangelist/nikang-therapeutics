@@ -1,0 +1,148 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  $ref graph and id-reference fields in openapi/nikang-therapeutics-*-openapi.yml, cross-checked
+  against the `_links` relations and live object payloads returned by
+  https://www.nikangtx.com/wp-json on 2026-08-26.
+note: >-
+  The entity graph of the NiKang Therapeutics content API. Identifiers are bare integers — there are no
+  prefixed or typed ids on this surface, so an id is only meaningful together with the collection it
+  came from. Relationship traversal is via `_links` (HAL-ish rel names) or by re-querying with the
+  `include` parameter; there is no server-side join beyond `_embed`.
+id_scheme:
+  format: integer
+  prefixed: false
+  scope: >-
+    Post-like ids (posts, pages, media, dt_team) share one auto-increment sequence, so an id is unique
+    across those four collections. Term ids (categories, tags, dt_team_category) are a separate
+    sequence and can collide numerically with post-like ids.
+  detail: >-
+    Observed live: post 1004, page 638, media 1025, dt_team 490, category 13, dt_team_category 10.
+entities:
+- name: Post
+  collection: /wp/v2/posts
+  count_at_harvest: 16
+  description: A news post — press release, clinical data announcement or scientific presentation.
+  key_fields: [id, slug, title.rendered, content.rendered, excerpt.rendered, date_gmt, modified_gmt, link, status, author, categories, tags, featured_media]
+- name: Page
+  collection: /wp/v2/pages
+  count_at_harvest: 9
+  description: A corporate page — about us, science and pipeline, news, careers, jobs, privacy, terms.
+  key_fields: [id, slug, title.rendered, content.rendered, parent, menu_order, link, modified_gmt]
+- name: TeamMember
+  collection: /wp/v2/dt_team
+  count_at_harvest: 10
+  description: >-
+    A named person — board member or officer. The7 theme custom post type. title.rendered is the
+    person's name, content.rendered the biography, featured_media the headshot.
+  key_fields: [id, slug, title.rendered, content.rendered, dt_team_category, featured_media]
+- name: MediaItem
+  collection: /wp/v2/media
+  count_at_harvest: 67
+  description: A media library attachment — logo, headshot, pipeline graphic or press asset.
+  key_fields: [id, slug, source_url, mime_type, media_type, alt_text, media_details, post]
+- name: Term
+  collections: [/wp/v2/categories, /wp/v2/tags, /wp/v2/dt_team_category]
+  count_at_harvest: 5
+  description: A taxonomy term.
+  instances:
+  - {taxonomy: category, id: 13, slug: news, count: 16}
+  - {taxonomy: category, id: 12, slug: timeline, count: 0}
+  - {taxonomy: category, id: 1, slug: uncategorized, count: 0}
+  - {taxonomy: dt_team_category, id: 10, slug: board, count: 7}
+  - {taxonomy: dt_team_category, id: 9, slug: officers, count: 2}
+  key_fields: [id, slug, name, taxonomy, count, parent, link]
+- name: Taxonomy
+  collection: /wp/v2/taxonomies
+  count_at_harvest: 5
+  description: Taxonomy registry entry — category, post_tag, nav_menu, wp_pattern_category, dt_team_category.
+- name: PostType
+  collection: /wp/v2/types
+  count_at_harvest: 13
+  description: Post-type registry entry. Only `post`, `page`, `attachment` and `dt_team` have anonymously readable collections.
+- name: Comment
+  collection: /wp/v2/comments
+  count_at_harvest: 0
+  description: Registered and reachable, but no instance exists on this deployment.
+- name: SearchResult
+  collection: /wp/v2/search
+  description: >-
+    A projection, not a stored entity — {id, title, url, type, subtype}. The only cross-type view of
+    the graph.
+- name: User
+  collection: /wp/v2/users
+  reachable: false
+  description: >-
+    401-gated anonymously (rest_user_cannot_view). Present in the graph as a dangling integer on
+    Post.author only.
+relationships:
+- from: Post
+  to: Term
+  cardinality: has_many
+  via: categories
+  detail: Array of category term ids. Resolve with GET /wp/v2/categories?include=<ids>.
+- from: Post
+  to: Term
+  cardinality: has_many
+  via: tags
+  detail: Array of post_tag term ids. Always empty — the taxonomy is registered but holds no terms.
+- from: Post
+  to: MediaItem
+  cardinality: has_one
+  via: featured_media
+  detail: Attachment id, or 0 when unset. Resolve with GET /wp/v2/media/{id}, or inline with _embed.
+- from: Post
+  to: User
+  cardinality: belongs_to
+  via: author
+  detail: >-
+    Broken traversal for anonymous consumers — /wp/v2/users is 401-gated, so the id cannot be resolved.
+- from: TeamMember
+  to: Term
+  cardinality: has_many
+  via: dt_team_category
+  detail: Team-category term ids — 10 (Board) or 9 (Officers).
+- from: TeamMember
+  to: MediaItem
+  cardinality: has_one
+  via: featured_media
+  detail: The person's headshot.
+- from: Page
+  to: Page
+  cardinality: belongs_to
+  via: parent
+  detail: Page hierarchy. Flat on this deployment — every published page has parent 0.
+- from: MediaItem
+  to: Post
+  cardinality: belongs_to
+  via: post
+  detail: The object the attachment was uploaded to, when any.
+- from: Comment
+  to: Post
+  cardinality: belongs_to
+  via: post
+  detail: Contract only — no comment instance exists.
+- from: Term
+  to: Term
+  cardinality: belongs_to
+  via: parent
+  detail: Hierarchical taxonomies only (category, dt_team_category). Flat on this deployment.
+- from: Term
+  to: Taxonomy
+  cardinality: belongs_to
+  via: taxonomy
+  detail: Slug reference into /wp/v2/taxonomies.
+traversal:
+  embed: >-
+    `_embed` inlines author, wp:featuredmedia and wp:term into an `_embedded` object on the same
+    response, collapsing three round trips into one. This is the only server-side join available.
+  links: >-
+    Every object carries `_links` with self, collection, about, replies, wp:attachment,
+    wp:featuredmedia, wp:term and curies. Posts additionally carry author and version-history.
+  no_graphql: No GraphQL endpoint is exposed — /graphql 404s on both hosts.
+render:
+  subway: null
+  detail: No subway/ diagram exists for this repo.
+cross_links:
+  conventions: conventions/nikang-therapeutics-conventions.yml
+  errors: errors/nikang-therapeutics-problem-types.yml

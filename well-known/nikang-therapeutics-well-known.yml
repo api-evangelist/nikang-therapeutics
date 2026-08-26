@@ -1,0 +1,67 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Direct anonymous HTTPS probes with a browser User-Agent against both hosts NiKang Therapeutics
+  controls, run 2026-08-26.
+note: >-
+  Every path 404s on both hosts. NO `WellKnown` and NO `SecurityTxt` pointer is emitted in apis.yml,
+  because this file records an ABSENCE, not a served surface. Two distinct 404 bodies were observed
+  and both were read, not just their status codes: /.well-known/security.txt returns a 548-byte
+  nginx "404 Not Found" page from the WP Engine origin, while every other path is swallowed by the
+  WordPress rewrite and returns the site's 60,225-byte themed 404 page with a 404 status. Neither is
+  a document; there is no soft-200 false positive here. The one machine-readable discovery document
+  this deployment does serve is the WordPress REST route index at https://www.nikangtx.com/wp-json,
+  which is not a /.well-known/ path and is catalogued in openapi/ instead.
+hosts:
+- host: www.nikangtx.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: nikangtx.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null

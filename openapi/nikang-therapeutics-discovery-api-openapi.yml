@@ -1,0 +1,307 @@
+openapi: 3.2.0
+info:
+  title: NiKang Therapeutics Discovery API
+  version: wp/v2
+  summary: Route, type, taxonomy and status discovery documents.
+  description: 'The read-only content surface NiKang Therapeutics exposes at https://www.nikangtx.com/wp-json. NiKang
+    Therapeutics is a clinical-stage biotechnology company in Wilmington, Delaware, founded in 2017, discovering
+    small molecule oncology medicines against difficult-to-drug targets (HIF2α, CDK2, CDK2/4, KRAS G12D) by structure-based
+    drug design. It runs no developer program and markets no product API. This document covers the self-describing
+    surface: the /wp-json index that lists all 210 routes across 17 namespaces, plus the post-type, taxonomy and
+    status registries. The index is the machine-readable contract this whole profile was derived from.'
+  contact:
+    name: NiKang Therapeutics
+    url: https://www.nikangtx.com/
+    email: info@nikangtx.com
+  license:
+    name: All rights reserved — content is NiKang Therapeutics'; this description is an API Evangelist derivation.
+    url: https://www.nikangtx.com/terms-of-use/
+  termsOfService: https://www.nikangtx.com/terms-of-use/
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route
+    index at https://www.nikangtx.com/wp-json/ (210 routes across 17 namespaces) and verified against live anonymous
+    responses on 2026-08-26. Every query parameter below appears verbatim in that route index''s `args` block for
+    the endpoint it is attached to, and every collection count quoted in a description was read from the `X-WP-Total`
+    response header on that date. NiKang Therapeutics publishes no OpenAPI, no developer portal, no API reference
+    and no developer program; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines
+    the wp/v2 contract. The deployment is WP Engine behind Cloudflare, the theme is The7, and every /wp-json response
+    carries `x-robots-tag: noindex`. Routes that returned 401 anonymously (/wp/v2/users, /wp/v2/settings, /wp/v2/block-types,
+    wp-abilities/v1, wp-site-health/v1) and every write method are deliberately excluded. Nothing here was obtained
+    with credentials.'
+servers:
+- url: https://www.nikangtx.com/wp-json
+  description: Production content API (WP Engine origin behind Cloudflare)
+tags:
+- name: discovery
+  description: Route, type and status discovery.
+paths:
+  /:
+    get:
+      tags:
+      - discovery
+      operationId: getApiIndex
+      summary: Get the REST API index
+      description: Returns the site index — name ("Nikang Therapeutics"), url, home, the 17 registered namespaces,
+        the authentication array (empty on this deployment), the site icon, and the full 210-entry route table with
+        per-endpoint `args`.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - name: namespace
+        in: query
+        description: Restrict the response to a single namespace.
+        schema:
+          type: string
+          examples:
+          - wp/v2
+      responses:
+        '200':
+          description: Site index.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiIndex'
+  /wp/v2/types:
+    get:
+      tags:
+      - discovery
+      operationId: listPostTypes
+      summary: List registered post types
+      description: 'Returns every registered post type keyed by slug. Thirteen are registered on this deployment:
+        the WordPress core types plus `dt_team` (The7 theme team members) and `wpb_gutenberg_param`.'
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A map of post types.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/PostType'
+  /wp/v2/types/{type}:
+    get:
+      tags:
+      - discovery
+      operationId: getPostType
+      summary: Get one post type
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A single post type.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostType'
+        '404': &id001
+          description: No route matched, or the resource id does not exist (rest_no_route / rest_post_invalid_id).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/statuses:
+    get:
+      tags:
+      - discovery
+      operationId: listStatuses
+      summary: List registered post statuses
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A map of statuses.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Status'
+  /wp/v2/statuses/{status}:
+    get:
+      tags:
+      - discovery
+      operationId: getStatus
+      summary: Get one post status
+      parameters:
+      - name: status
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A single status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '404': *id001
+components:
+  parameters:
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in response. Anonymously only
+        `view` and `embed` return data — `edit` requires an authenticated user.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in result set. Values above 100 return 400 rest_invalid_param;
+        the bound is not clamped.
+      schema:
+        type: integer
+        default: 10
+        minimum: 1
+        maximum: 100
+    Fields:
+      name: _fields
+      in: query
+      description: Comma-separated allow-list of top-level response fields to return.
+      schema:
+        type: string
+    Embed:
+      name: _embed
+      in: query
+      description: Inline embeddable resources (author, featured media, terms) under _embedded.
+      schema:
+        type: string
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the resource.
+      schema:
+        type: integer
+  schemas:
+    ApiIndex:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+          format: uri
+        home:
+          type: string
+          format: uri
+        gmt_offset:
+          type: string
+        timezone_string:
+          type: string
+        site_logo:
+          type: integer
+        site_icon:
+          type: integer
+        site_icon_url:
+          type: string
+          format: uri
+        namespaces:
+          type: array
+          items:
+            type: string
+        authentication:
+          type: array
+          items:
+            type: object
+          description: Empty on this deployment — no authentication scheme is advertised for anonymous discovery.
+        routes:
+          type: object
+          description: Route table keyed by path pattern; each entry carries namespace, methods, endpoints[] with
+            args, and _links.
+        _links:
+          type: object
+    PostType:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        has_archive:
+          type: boolean
+        taxonomies:
+          type: array
+          items:
+            type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        icon:
+          type: string
+        visibility:
+          type: object
+        _links:
+          type: object
+    Status:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        public:
+          type: boolean
+        queryable:
+          type: boolean
+        date_floating:
+          type: boolean
+        _links:
+          type: object
+    Error:
+      type: object
+      description: WordPress REST error envelope. Not RFC 9457 problem+json — there is no `type` URI and the media
+        type is application/json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_invalid_param, rest_post_invalid_id, rest_no_route,
+            rest_forbidden.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: Per-parameter validation messages (400 only).
+            details:
+              type: object
+              description: Per-parameter structured detail with its own code/message (400 only).
+      required:
+      - code
+      - message
+      - data

@@ -1,0 +1,87 @@
+generated: '2026-08-26'
+method: derived
+status: candidate
+source: >-
+  Derived from the operations in openapi/nikang-therapeutics-*-openapi.yml. Searched and probed first
+  for an official server on 2026-08-26 and found none: POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}
+  returned 404 on https://www.nikangtx.com/mcp, /sse, /api/mcp, /wp-json/mcp and
+  /wp-json/jet-engine/v1/mcp; no MCP route appears anywhere in the 210-route index at
+  https://www.nikangtx.com/wp-json; no npm or PyPI package exists under any nikang name; there is no
+  GitHub organisation; and MCP, agents and AI integration are mentioned nowhere on www.nikangtx.com.
+note: >-
+  NiKang Therapeutics ships NO MCP server. Everything below is an API Evangelist derivation showing
+  what a server over the existing anonymous content API could expose. It is a proposal, not a
+  discovery. No endpoint URL is invented and none should be inferred — `endpoint` is deliberately
+  empty. No ToolCrosswalk artifact is emitted, because a crosswalk binds real tools to real
+  operations and there are no real tools here.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: none
+  verified: derived
+  detail: >-
+    `none` means nobody ships a server — not that a server exists and is unreachable. The underlying
+    API needs no credentials, so a server built over it would need none either.
+server:
+  name: nikang-therapeutics-content
+  transport: null
+  published_by: null
+candidate_tools:
+- name: search_nikang_content
+  description: Search every published NiKang Therapeutics object — news posts, corporate pages and team members — in one call.
+  backing_operation: searchContent
+  backing_path: GET /wp/v2/search
+  confidence: high
+- name: list_news_posts
+  description: List NiKang Therapeutics news posts newest-first, filterable by date window and category.
+  backing_operation: listPosts
+  backing_path: GET /wp/v2/posts
+  confidence: high
+- name: get_news_post
+  description: Fetch one news post by id, including its full rendered body.
+  backing_operation: getPost
+  backing_path: GET /wp/v2/posts/{id}
+  confidence: high
+- name: list_pages
+  description: List NiKang's corporate pages — about us, science and pipeline, careers, jobs, legal.
+  backing_operation: listPages
+  backing_path: GET /wp/v2/pages
+  confidence: high
+- name: get_page
+  description: Fetch one corporate page by id, including the rendered pipeline and about-us content.
+  backing_operation: getPage
+  backing_path: GET /wp/v2/pages/{id}
+  confidence: high
+- name: list_team_members
+  description: List NiKang's board members and officers, filterable by the Board or Officers team category.
+  backing_operation: listTeamMembers
+  backing_path: GET /wp/v2/dt_team
+  confidence: high
+- name: get_team_member
+  description: Fetch one board member or officer, including their biography and headshot reference.
+  backing_operation: getTeamMember
+  backing_path: GET /wp/v2/dt_team/{id}
+  confidence: high
+- name: list_media
+  description: List media library assets — logos, headshots, pipeline graphics and press assets — with direct source URLs.
+  backing_operation: listMedia
+  backing_path: GET /wp/v2/media
+  confidence: high
+- name: list_categories
+  description: List the post categories available for filtering the news archive.
+  backing_operation: listCategories
+  backing_path: GET /wp/v2/categories
+  confidence: high
+coverage:
+  openapi_operations: 26
+  operations_mapped: 9
+  detail: >-
+    Nine of the twenty-six catalogued operations are worth exposing as tools. The remainder are
+    registry and discovery reads (types, taxonomies, statuses, the route index), single-term getters,
+    the empty comment collection and the oEmbed endpoint — useful to a client library, not to an agent.
+cross_links:
+  openapi: openapi/
+  conventions: conventions/nikang-therapeutics-conventions.yml
+  rate_limits: rate-limits/nikang-therapeutics-rate-limits.yml

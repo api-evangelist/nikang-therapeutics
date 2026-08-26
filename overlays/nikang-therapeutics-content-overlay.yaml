@@ -1,0 +1,91 @@
+overlay: 1.0.0
+info:
+  title: NiKang Therapeutics content API — API Evangelist enhancements
+  version: 1.0.0
+  summary: >-
+    The enhancements API Evangelist applied on top of the raw WordPress route index when deriving
+    openapi/nikang-therapeutics-*-openapi.yml. NiKang Therapeutics publishes no OpenAPI, so there is no
+    upstream document to extend — this Overlay records what we ADDED, so a reader can separate the
+    provider's contract from our contribution and reapply it after any re-harvest.
+  x-generated: '2026-08-26'
+  x-method: generated
+  x-source: >-
+    Authored by the API Evangelist enrichment pipeline against the specs in openapi/, which were
+    themselves derived from https://www.nikangtx.com/wp-json on 2026-08-26.
+extends: openapi/
+x-applies-to:
+- openapi/nikang-therapeutics-posts-api-openapi.yml
+- openapi/nikang-therapeutics-pages-api-openapi.yml
+- openapi/nikang-therapeutics-team-api-openapi.yml
+- openapi/nikang-therapeutics-media-api-openapi.yml
+- openapi/nikang-therapeutics-taxonomy-api-openapi.yml
+- openapi/nikang-therapeutics-search-api-openapi.yml
+- openapi/nikang-therapeutics-discovery-api-openapi.yml
+- openapi/nikang-therapeutics-comments-api-openapi.yml
+- openapi/nikang-therapeutics-oembed-api-openapi.yml
+actions:
+- target: $.info
+  description: >-
+    Attach provenance naming the exact source, the harvest date, the route and namespace counts, and
+    the fact that NiKang publishes no OpenAPI of its own — so the document can never be mistaken for a
+    provider-authored contract.
+  update:
+    x-api-evangelist-provenance: >-
+      Derived from the live WordPress REST route index at https://www.nikangtx.com/wp-json (210 routes
+      across 17 namespaces), verified against live anonymous responses on 2026-08-26.
+- target: $.servers
+  description: >-
+    The route index publishes no servers block. Added the production base URL read from the index's own
+    `url` field, annotated with the observed edge topology (Cloudflare in front of WP Engine).
+  update:
+    url: https://www.nikangtx.com/wp-json
+- target: $.info.contact
+  description: >-
+    Added a contact block using info@nikangtx.com, read from the site footer on 2026-08-26. Note this
+    is NiKang's general enquiry address, not a developer support channel — none exists.
+- target: $.paths[*][*].responses
+  description: >-
+    The route index declares no responses at all. Added 200 response schemas modelled from live payload
+    keys, plus the 400 and 404 error responses captured verbatim from the deployment, so consumers can
+    handle failure without guessing.
+- target: $.paths[*].get.responses['200'].headers
+  description: >-
+    Added X-WP-Total, X-WP-TotalPages and Link as declared response headers on every collection
+    operation. These are the pagination contract and they are invisible in the route index.
+- target: $.paths[*][*].operationId
+  description: >-
+    The route index has no operation identifiers. Assigned stable camelCase operationIds
+    (listPosts, getPost, listTeamMembers, searchContent, ...) so the operations can be referenced from
+    skills/, mcp/ and the tool crosswalk.
+- target: $.paths[*][*].description
+  description: >-
+    Enriched descriptions with live cardinality read from X-WP-Total on 2026-08-26 — 16 posts, 9 pages,
+    67 media items, 10 team members, 3 categories, 0 tags, 0 comments — so a consumer knows which
+    registered collections actually carry data before calling them.
+- target: $.components.parameters.PerPage
+  description: >-
+    Recorded the real bound (1..100) and that exceeding it returns 400 rest_invalid_param rather than
+    clamping. Verified live on per_page=200.
+- target: $.components.schemas
+  description: >-
+    Added named schemas (Post, Page, TeamMember, MediaItem, Term, Taxonomy, PostType, Status, Comment,
+    SearchResult, ApiIndex, Oembed, Error) built from live response keys, including the deployment's
+    theme and plugin extensions — acf, cp_meta_data, class_list — which are absent from the core
+    WordPress contract.
+- target: $.tags
+  description: >-
+    Split the single 210-route index into nine tagged documents along resource families, so each API
+    entry in apis.yml points at a document a consumer can actually read.
+x-exclusions:
+  description: >-
+    Deliberately NOT represented in openapi/, and recorded here so the omission is a decision rather
+    than a gap.
+  excluded:
+  - Every write method (POST, PUT, PATCH, DELETE) — all require an authenticated WordPress user.
+  - Routes returning 401 anonymously — /wp/v2/users, /wp/v2/settings, /wp/v2/block-types,
+    wp-abilities/v1, wp-site-health/v1, /oembed/1.0/proxy (the last is kept, but documented as gated).
+  - The plugin administration namespaces — wpe/cache-plugin, wpe_sign_on_plugin, wordfence,
+    wordfence-login-security, ninja-forms-submissions, ninja-forms-views, duplicate-post, nps-survey,
+    ultimate-vc, uavc, cooltimeline, the7 — which are site operations, not a content contract.
+  - Namespaces registered but unrouted anonymously — the7/v1 and nps-survey/v1 concrete paths return
+    rest_no_route.

@@ -1,0 +1,226 @@
+openapi: 3.2.0
+info:
+  title: NiKang Therapeutics oEmbed API
+  version: wp/v2
+  summary: oEmbed 1.0 provider endpoint for www.nikangtx.com URLs.
+  description: The read-only content surface NiKang Therapeutics exposes at https://www.nikangtx.com/wp-json. NiKang
+    Therapeutics is a clinical-stage biotechnology company in Wilmington, Delaware, founded in 2017, discovering
+    small molecule oncology medicines against difficult-to-drug targets (HIF2α, CDK2, CDK2/4, KRAS G12D) by structure-based
+    drug design. It runs no developer program and markets no product API. This document covers the oembed/1.0 namespace.
+    The deployment is a conformant oEmbed 1.0 provider for its own URLs — verified live on 2026-08-26, which returned
+    provider_name "Nikang Therapeutics" for the site root.
+  contact:
+    name: NiKang Therapeutics
+    url: https://www.nikangtx.com/
+    email: info@nikangtx.com
+  license:
+    name: All rights reserved — content is NiKang Therapeutics'; this description is an API Evangelist derivation.
+    url: https://www.nikangtx.com/terms-of-use/
+  termsOfService: https://www.nikangtx.com/terms-of-use/
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route
+    index at https://www.nikangtx.com/wp-json/ (210 routes across 17 namespaces) and verified against live anonymous
+    responses on 2026-08-26. Every query parameter below appears verbatim in that route index''s `args` block for
+    the endpoint it is attached to, and every collection count quoted in a description was read from the `X-WP-Total`
+    response header on that date. NiKang Therapeutics publishes no OpenAPI, no developer portal, no API reference
+    and no developer program; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines
+    the wp/v2 contract. The deployment is WP Engine behind Cloudflare, the theme is The7, and every /wp-json response
+    carries `x-robots-tag: noindex`. Routes that returned 401 anonymously (/wp/v2/users, /wp/v2/settings, /wp/v2/block-types,
+    wp-abilities/v1, wp-site-health/v1) and every write method are deliberately excluded. Nothing here was obtained
+    with credentials.'
+servers:
+- url: https://www.nikangtx.com/wp-json
+  description: Production content API (WP Engine origin behind Cloudflare)
+tags:
+- name: oembed
+  description: oEmbed 1.0 provider.
+paths:
+  /oembed/1.0/embed:
+    get:
+      tags:
+      - oembed
+      operationId: getOembed
+      summary: Get oEmbed data for a site URL
+      description: Returns an oEmbed 1.0 response for any URL on www.nikangtx.com. Verified anonymously on 2026-08-26.
+      parameters:
+      - name: url
+        in: query
+        required: true
+        description: The URL of the resource for which to fetch oEmbed data.
+        schema:
+          type: string
+          format: uri
+      - name: format
+        in: query
+        description: Response format.
+        schema:
+          type: string
+          enum:
+          - json
+          - xml
+          default: json
+      - name: maxwidth
+        in: query
+        description: Maximum embed width.
+        schema:
+          type: integer
+          default: 600
+      responses:
+        '200':
+          description: oEmbed 1.0 response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Oembed'
+        '404':
+          description: No route matched, or the resource id does not exist (rest_no_route / rest_post_invalid_id).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /oembed/1.0/proxy:
+    get:
+      tags:
+      - oembed
+      operationId: proxyOembed
+      summary: Proxy an oEmbed request to a remote provider
+      description: Registered on this deployment but 401-gated anonymously — it requires an authenticated user with
+        edit capability. Catalogued for completeness; it is not part of the anonymous surface.
+      parameters:
+      - name: url
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uri
+      - name: format
+        in: query
+        schema:
+          type: string
+          default: json
+      - name: maxwidth
+        in: query
+        schema:
+          type: integer
+      - name: maxheight
+        in: query
+        schema:
+          type: integer
+      responses:
+        '401':
+          description: rest_forbidden — authentication required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  parameters:
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in response. Anonymously only
+        `view` and `embed` return data — `edit` requires an authenticated user.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in result set. Values above 100 return 400 rest_invalid_param;
+        the bound is not clamped.
+      schema:
+        type: integer
+        default: 10
+        minimum: 1
+        maximum: 100
+    Fields:
+      name: _fields
+      in: query
+      description: Comma-separated allow-list of top-level response fields to return.
+      schema:
+        type: string
+    Embed:
+      name: _embed
+      in: query
+      description: Inline embeddable resources (author, featured media, terms) under _embedded.
+      schema:
+        type: string
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the resource.
+      schema:
+        type: integer
+  schemas:
+    Oembed:
+      type: object
+      properties:
+        version:
+          type: string
+          enum:
+          - '1.0'
+        provider_name:
+          type: string
+        provider_url:
+          type: string
+          format: uri
+        title:
+          type: string
+        type:
+          type: string
+        width:
+          type: integer
+        height:
+          type: integer
+        html:
+          type: string
+        author_name:
+          type: string
+        author_url:
+          type: string
+          format: uri
+        thumbnail_url:
+          type: string
+          format: uri
+    Error:
+      type: object
+      description: WordPress REST error envelope. Not RFC 9457 problem+json — there is no `type` URI and the media
+        type is application/json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_invalid_param, rest_post_invalid_id, rest_no_route,
+            rest_forbidden.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: Per-parameter validation messages (400 only).
+            details:
+              type: object
+              description: Per-parameter structured detail with its own code/message (400 only).
+      required:
+      - code
+      - message
+      - data

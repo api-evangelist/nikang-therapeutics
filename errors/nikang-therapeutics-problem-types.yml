@@ -1,0 +1,104 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  4xx responses declared in openapi/nikang-therapeutics-*-openapi.yml, plus error bodies captured live
+  and verbatim from https://www.nikangtx.com/wp-json on 2026-08-26.
+note: >-
+  NiKang Therapeutics publishes no error reference. This catalogue is the WordPress REST error contract
+  as this deployment actually returns it. It is NOT RFC 9457 — the media type is application/json, not
+  application/problem+json, and no `type` URI is present on any response.
+format: wordpress-rest
+rfc9457: false
+content_type: application/json
+envelope:
+  shape: '{ code: string, message: string, data: { status: int, params?: object, details?: object } }'
+  fields:
+    code: Stable machine-readable identifier. This is the field a client should branch on.
+    message: Human-readable English sentence. Not stable; do not match on it.
+    data.status: HTTP status code, repeated inside the body.
+    data.params: Present on 400 only — a map of parameter name to a plain-language validation message.
+    data.details: Present on 400 only — a map of parameter name to a nested { code, message, data } object.
+problem_types:
+- code: rest_invalid_param
+  status: 400
+  title: Invalid parameter
+  observed_on: 'GET /wp/v2/posts?per_page=200'
+  observed_body: >-
+    {"code":"rest_invalid_param","message":"Invalid parameter(s): per_page","data":{"status":400,"params":{"per_page":"per_page
+    must be between 1 (inclusive) and 100 (inclusive)"},"details":{"per_page":{"code":"rest_out_of_bounds","message":"per_page
+    must be between 1 (inclusive) and 100 (inclusive)","data":null}}}}
+  remediation: >-
+    Read data.details[<param>].code for the specific failure — rest_out_of_bounds here — and correct
+    the parameter. The bound is enforced, not clamped, so a client that sends per_page=200 gets nothing
+    back rather than 100 items.
+  retryable: false
+- code: rest_out_of_bounds
+  status: 400
+  title: Parameter outside its permitted range
+  observed_on: 'nested inside data.details on GET /wp/v2/posts?per_page=200'
+  remediation: Clamp per_page to 1..100 client-side before sending.
+  retryable: false
+- code: rest_post_invalid_id
+  status: 404
+  title: Invalid post ID
+  observed_on: 'GET /wp/v2/posts/999999'
+  observed_body: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+  remediation: >-
+    The id does not exist, is not published, or is of a different post type than the route. List the
+    collection first and use an id from it. Term routes return rest_term_invalid for the same class of
+    error.
+  retryable: false
+- code: rest_no_route
+  status: 404
+  title: No route matched
+  observed_on: 'GET /wp/v2/nope, GET /wp/v2/cool_timeline, GET /the7/v1/settings'
+  observed_body: >-
+    {"code":"rest_no_route","message":"No route was found matching the URL and request method.","data":{"status":404}}
+  remediation: >-
+    Fetch https://www.nikangtx.com/wp-json and read the `routes` table rather than guessing paths. This
+    is also what a registered-but-unrouted namespace returns: the7/v1 and nps-survey/v1 appear in the
+    namespaces list but their concrete paths 404 anonymously.
+  retryable: false
+- code: rest_forbidden
+  status: 401
+  title: Authentication required
+  observed_on: 'GET /wp/v2/settings, GET /wp-abilities/v1/abilities, GET /oembed/1.0/proxy'
+  observed_body: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+  remediation: >-
+    The route requires an authenticated WordPress user. No credential is obtainable by the public, so
+    this is a permanent boundary for an anonymous consumer, not a transient failure. Note the status is
+    401 while the code says "forbidden".
+  retryable: false
+- code: rest_user_cannot_view
+  status: 401
+  title: User listing not permitted
+  observed_on: 'GET /wp/v2/users'
+  observed_body: >-
+    {"code":"rest_user_cannot_view","message":"Sorry, you are not allowed to list users.","data":{"status":401}}
+  remediation: >-
+    Author ids on posts cannot be resolved anonymously. Use the dt_team collection for NiKang's named
+    people instead — see openapi/nikang-therapeutics-team-api-openapi.yml.
+  retryable: false
+- code: rest_block_type_cannot_view
+  status: 401
+  title: Block type listing not permitted
+  observed_on: 'GET /wp/v2/block-types'
+  retryable: false
+non_api_failure_modes:
+- name: Cloudflare interstitial
+  status: 403
+  content_type: text/html
+  detail: >-
+    A non-browser User-Agent was served a "Attention Required! | Cloudflare" HTML challenge page
+    mid-pass instead of JSON. This is an edge control, not an API error — it carries no `code` field
+    and is not part of the WordPress contract. A browser User-Agent was served 200 JSON for the same
+    URL immediately afterwards. Clients must be prepared for an HTML body on any request.
+- name: Themed 404 on non-API paths
+  status: 404
+  content_type: text/html
+  detail: >-
+    Paths outside /wp-json that WordPress does not route (including every /.well-known/* path except
+    security.txt) return the site's 60KB themed 404 HTML page with a correct 404 status.
+cross_links:
+  conventions: conventions/nikang-therapeutics-conventions.yml
+  authentication: authentication/nikang-therapeutics-authentication.yml

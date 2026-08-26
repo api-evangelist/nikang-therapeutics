@@ -64,5 +64,22 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Nikang Therapeutics is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
+NiKang Therapeutics is a clinical-stage biotechnology company in Wilmington, Delaware, founded in 2017,
+discovering small molecule oncology medicines against difficult-to-drug targets — HIF2alpha (NKT2152),
+CDK2 (NKT3964), CDK2/4 (NKT5097) and KRAS G12D — using structure-based drug design across both
+inhibitor and targeted-protein-degradation modalities.
+
+**NiKang Therapeutics runs no developer program.** It publishes no product API, developer portal, API
+reference or machine-readable specification of its own. The only machine-readable surface reachable
+without credentials is the WordPress REST content API behind `www.nikangtx.com` — 210 registered routes
+across 17 namespaces — and that is what this profile catalogues: nine derived OpenAPI 3.2.0 documents
+covering 26 anonymously readable read-only operations, plus the semantics, errors, data model,
+conformance and security posture observed live on 2026-08-26.
+
+Probed and found absent on that date: OpenAPI published by the company, GraphQL, gRPC, SOAP/WSDL,
+AsyncAPI, webhooks, an MCP server, an A2A agent card, SDKs, a CLI, a status page, a changelog, a
+deprecation policy, and any pricing or plans. Every `/.well-known/` path returns 404 on both hosts.
+
+- https://www.nikangtx.com/
+- https://www.nikangtx.com/science-and-pipeline/
 - https://forgeglobal.com/nikang-therapeutics_stock/

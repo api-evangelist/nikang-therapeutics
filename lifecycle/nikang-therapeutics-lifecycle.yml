@@ -1,0 +1,82 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  Searched www.nikangtx.com for a versioning policy, deprecation policy, SLA, changelog and status
+  page on 2026-08-26; none exists. Runtime facts derived from the live route index and response
+  headers at https://www.nikangtx.com/wp-json.
+note: >-
+  NiKang Therapeutics is a clinical-stage biotech with no developer program, so there is no API
+  lifecycle commitment of any kind to record. The honest finding is an absence across every field
+  below. NO `StatusPage` and NO `Deprecation` pointer is emitted in apis.yml, because neither exists.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  policy_published: false
+  detail: >-
+    The version is the WordPress REST namespace, not a NiKang version. NiKang does not control it and
+    does not commit to it. A WordPress core, The7 theme or plugin update on this site can add, move or
+    remove routes without notice — the `wp-abilities/v1` and `nps-survey/v1` namespaces registered here
+    are evidence of exactly that kind of drift.
+  upstream_contract: https://developer.wordpress.org/rest-api/
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  detail: >-
+    No Sunset or Deprecation response header was returned on any probed endpoint, and no deprecation
+    policy page exists. No operation in openapi/ is marked deprecated because none is declared as such
+    in the route index.
+sla:
+  published: false
+  detail: No uptime commitment, support tier or response-time target is published.
+status_page:
+  published: false
+  url: null
+  detail: >-
+    No status.nikangtx.com, no statuspage.io/instatus/betteruptime tenant, and no status link in the
+    site footer. Uptime for this surface is whatever WP Engine and Cloudflare deliver; NiKang publishes
+    nothing about it.
+changelog:
+  published: false
+  url: null
+  detail: >-
+    No API changelog. The nearest published dated stream is the corporate news archive at
+    https://www.nikangtx.com/news/ (16 posts, RSS at https://www.nikangtx.com/feed/), which announces
+    clinical and corporate milestones, not API changes.
+support:
+  developer_support: false
+  channels:
+  - address: info@nikangtx.com
+    purpose: General enquiries — the only public contact address that is not role-specific.
+  - address: BDRequests@nikangtx.com
+    purpose: Business development.
+  - address: IR@nikangtx.com
+    purpose: Investor relations.
+  - address: careers@nikangtx.com
+    purpose: Careers.
+  detail: >-
+    All four addresses were read from the site footer on 2026-08-26. None of them is a developer or
+    API support channel; there is no ticketing system, forum, Slack or Discord.
+runtime_observations:
+  platform: WordPress on WP Engine behind Cloudflare
+  theme: The7 (registers the dt_team post type and dt_team_category taxonomy)
+  wordpress_version: null
+  wordpress_version_inference: >-
+    Not disclosed — no generator meta tag is emitted. The presence of the `search_semantics` and
+    `ignore_sticky` query args and of the `wp-abilities/v1` namespace in the route index indicates a
+    recent WordPress core (6.9 or later). Recorded as an inference, not a fact.
+  namespaces_registered: 17
+  routes_registered: 210
+  content_freshness:
+    newest_post: '2025-12-11'
+    newest_page_modified: '2026-02-12'
+    newest_media: '2026-02-12'
+    detail: >-
+      Read from the API itself on 2026-08-26. The science-and-pipeline page and the media library were
+      both last touched 2026-02-12; the news archive's most recent post is dated 2025-12-11. The site
+      is maintained but not frequently updated.
+cross_links:
+  conventions: conventions/nikang-therapeutics-conventions.yml
+  conformance: conformance/nikang-therapeutics-conformance.yml

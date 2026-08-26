@@ -1,0 +1,442 @@
+openapi: 3.2.0
+info:
+  title: NiKang Therapeutics Media API
+  version: wp/v2
+  summary: Media library — logos, headshots, pipeline graphics and press assets.
+  description: 'The read-only content surface NiKang Therapeutics exposes at https://www.nikangtx.com/wp-json. NiKang
+    Therapeutics is a clinical-stage biotechnology company in Wilmington, Delaware, founded in 2017, discovering
+    small molecule oncology medicines against difficult-to-drug targets (HIF2α, CDK2, CDK2/4, KRAS G12D) by structure-based
+    drug design. It runs no developer program and markets no product API. This document covers the `attachment`
+    type. Sixty-seven attachments were present at harvest time (X-WP-Total: 67 on 2026-08-26).'
+  contact:
+    name: NiKang Therapeutics
+    url: https://www.nikangtx.com/
+    email: info@nikangtx.com
+  license:
+    name: All rights reserved — content is NiKang Therapeutics'; this description is an API Evangelist derivation.
+    url: https://www.nikangtx.com/terms-of-use/
+  termsOfService: https://www.nikangtx.com/terms-of-use/
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route
+    index at https://www.nikangtx.com/wp-json/ (210 routes across 17 namespaces) and verified against live anonymous
+    responses on 2026-08-26. Every query parameter below appears verbatim in that route index''s `args` block for
+    the endpoint it is attached to, and every collection count quoted in a description was read from the `X-WP-Total`
+    response header on that date. NiKang Therapeutics publishes no OpenAPI, no developer portal, no API reference
+    and no developer program; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines
+    the wp/v2 contract. The deployment is WP Engine behind Cloudflare, the theme is The7, and every /wp-json response
+    carries `x-robots-tag: noindex`. Routes that returned 401 anonymously (/wp/v2/users, /wp/v2/settings, /wp/v2/block-types,
+    wp-abilities/v1, wp-site-health/v1) and every write method are deliberately excluded. Nothing here was obtained
+    with credentials.'
+servers:
+- url: https://www.nikangtx.com/wp-json
+  description: Production content API (WP Engine origin behind Cloudflare)
+tags:
+- name: media
+  description: Media library attachments.
+paths:
+  /wp/v2/media:
+    get:
+      tags:
+      - media
+      operationId: listMedia
+      summary: List media attachments
+      description: Returns attachments. Sixty-seven present at harvest time.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: after
+        in: query
+        schema:
+          type: string
+        description: Limit response to posts published after a given ISO8601 compliant date.
+      - name: modified_after
+        in: query
+        schema:
+          type: string
+        description: Limit response to posts modified after a given ISO8601 compliant date.
+      - name: author
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to posts assigned to specific authors.
+      - name: author_exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ensure result set excludes posts assigned to specific authors.
+      - name: before
+        in: query
+        schema:
+          type: string
+        description: Limit response to posts published before a given ISO8601 compliant date.
+      - name: modified_before
+        in: query
+        schema:
+          type: string
+        description: Limit response to posts modified before a given ISO8601 compliant date.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: search_semantics
+        in: query
+        schema:
+          type: string
+          enum:
+          - exact
+        description: How to interpret the search input.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          default: date
+        description: Sort collection by post attribute.
+      - name: parent
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to items with particular parent IDs.
+      - name: parent_exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to all items except those of a particular parent ID.
+      - name: search_columns
+        in: query
+        schema:
+          type: array
+          items:
+            enum:
+            - post_title
+            - post_content
+            - post_excerpt
+            type: string
+        description: Array of column names to be searched.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to posts with one or more specific slugs.
+      - name: status
+        in: query
+        schema:
+          type: array
+          items:
+            enum:
+            - inherit
+            - private
+            - trash
+            type: string
+          default: inherit
+        description: Limit result set to posts assigned one or more statuses.
+      - name: media_type
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - image
+            - video
+            - text
+            - application
+            - audio
+        description: Limit result set to attachments of a particular media type or media types.
+      - name: mime_type
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to attachments of a particular MIME type or MIME types.
+      - $ref: '#/components/parameters/Fields'
+      - $ref: '#/components/parameters/Embed'
+      responses:
+        '200':
+          description: A page of attachments.
+          headers:
+            X-WP-Total:
+              description: Total number of matching items.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link:
+              description: RFC 8288 Link header carrying rel="next" and rel="prev".
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MediaItem'
+        '400':
+          description: 'Invalid parameter. Observed verbatim on per_page=200: rest_invalid_param with a per-parameter
+            details block.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/media/{id}:
+    get:
+      tags:
+      - media
+      operationId: getMediaItem
+      summary: Get a single attachment
+      parameters:
+      - $ref: '#/components/parameters/ResourceId'
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Fields'
+      responses:
+        '200':
+          description: A single attachment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaItem'
+        '404':
+          description: No route matched, or the resource id does not exist (rest_no_route / rest_post_invalid_id).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  parameters:
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in response. Anonymously only
+        `view` and `embed` return data — `edit` requires an authenticated user.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in result set. Values above 100 return 400 rest_invalid_param;
+        the bound is not clamped.
+      schema:
+        type: integer
+        default: 10
+        minimum: 1
+        maximum: 100
+    Fields:
+      name: _fields
+      in: query
+      description: Comma-separated allow-list of top-level response fields to return.
+      schema:
+        type: string
+    Embed:
+      name: _embed
+      in: query
+      description: Inline embeddable resources (author, featured media, terms) under _embedded.
+      schema:
+        type: string
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the resource.
+      schema:
+        type: integer
+  schemas:
+    MediaItem:
+      type: object
+      description: A media library attachment.
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the object.
+        date:
+          type: string
+          format: date-time
+          description: Publication date in the site's timezone.
+        date_gmt:
+          type: string
+          format: date-time
+          description: Publication date as GMT.
+        guid: &id001
+          type: object
+          properties:
+            rendered:
+              type: string
+          description: WordPress rendered-content object.
+        modified:
+          type: string
+          format: date-time
+        modified_gmt:
+          type: string
+          format: date-time
+        slug:
+          type: string
+        status:
+          type: string
+          description: Anonymously always `publish` for posts/pages and `inherit` for media.
+        type:
+          type: string
+        link:
+          type: string
+          format: uri
+        title: *id001
+        content:
+          allOf:
+          - *id001
+          description: Rendered content, plus a `protected` boolean.
+        excerpt:
+          allOf:
+          - *id001
+          description: Rendered excerpt, plus a `protected` boolean.
+        featured_media:
+          type: integer
+          description: Attachment id of the featured image; 0 when none. Resolve via /wp/v2/media/{id}.
+        comment_status:
+          type: string
+          enum:
+          - open
+          - closed
+        ping_status:
+          type: string
+          enum:
+          - open
+          - closed
+        template:
+          type: string
+        class_list:
+          type: array
+          items:
+            type: string
+          description: The CSS class list WordPress would render for the object.
+        acf:
+          type: object
+          description: Advanced Custom Fields payload. Present and exposed anonymously on this deployment; empty
+            on every object sampled 2026-08-26.
+        cp_meta_data:
+          type: object
+          description: Theme/plugin-added meta bag observed on posts and dt_team objects.
+        _links:
+          type: object
+          description: 'HAL-style link relations: self, collection, about, author, replies, version-history, wp:attachment,
+            wp:featuredmedia, wp:term, curies.'
+        author:
+          type: integer
+        alt_text:
+          type: string
+        caption: *id001
+        description: *id001
+        media_type:
+          type: string
+          enum:
+          - image
+          - video
+          - text
+          - application
+          - audio
+        mime_type:
+          type: string
+        media_details:
+          type: object
+          description: Width, height, filesize, file path and the generated size variants.
+        post:
+          type: integer
+          description: Id of the object this attachment is attached to, when any.
+        source_url:
+          type: string
+          format: uri
+          description: Direct, publicly fetchable asset URL under /wp-content/uploads/.
+        meta:
+          type: object
+    Error:
+      type: object
+      description: WordPress REST error envelope. Not RFC 9457 problem+json — there is no `type` URI and the media
+        type is application/json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_invalid_param, rest_post_invalid_id, rest_no_route,
+            rest_forbidden.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: Per-parameter validation messages (400 only).
+            details:
+              type: object
+              description: Per-parameter structured detail with its own code/message (400 only).
+      required:
+      - code
+      - message
+      - data

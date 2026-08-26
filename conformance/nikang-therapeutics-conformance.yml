@@ -1,0 +1,120 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  openapi/nikang-therapeutics-*-openapi.yml, the route index at https://www.nikangtx.com/wp-json, and
+  live response headers/bodies observed anonymously on 2026-08-26. Docs on www.nikangtx.com were
+  searched for compliance and certification claims; none exists.
+note: >-
+  Cross-cutting standards posture of the NiKang Therapeutics content API. Every `conforms: true` below
+  is backed by a location in the contract or a header observed at the wire, never by a marketing claim.
+  Every `conforms: false` is an honest absence, not a penalty. NO `Compliance` pointer is emitted in
+  apis.yml: NiKang publishes no trust center, no certification list and no audit report.
+entries:
+- id: oembed-1.0
+  name: oEmbed 1.0
+  conforms: true
+  evidence: >-
+    The route index declares the `oembed/1.0` namespace with /oembed/1.0/embed. Called anonymously on
+    2026-08-26 for https://www.nikangtx.com/ it returned {"version":"1.0","provider_name":"Nikang
+    Therapeutics","provider_url":"https://www.nikangtx.com","title":"Home","type":"rich",...} — a
+    conformant oEmbed 1.0 rich response. See openapi/nikang-therapeutics-oembed-api-openapi.yml.
+- id: rfc8288
+  name: RFC 8288 Web Linking
+  conforms: true
+  evidence: >-
+    GET /wp-json/wp/v2/posts?per_page=2 returned
+    `link: <https://www.nikangtx.com/wp-json/wp/v2/posts?per_page=2&page=2>; rel="next"`.
+- id: pagination
+  name: Documented, header-signalled pagination
+  conforms: true
+  evidence: >-
+    page/per_page/offset query parameters declared in the route index args, plus X-WP-Total and
+    X-WP-TotalPages response headers, both exposed cross-origin via Access-Control-Expose-Headers.
+    Bounds are enforced with a 400, not clamped.
+- id: sitemaps-0.9
+  name: sitemaps.org 0.9
+  conforms: true
+  evidence: >-
+    https://www.nikangtx.com/wp-sitemap.xml returns a sitemapindex in the
+    http://www.sitemaps.org/schemas/sitemap/0.9 namespace, advertised from robots.txt. Seven child
+    sitemaps including posts, pages, dt_team and three taxonomies.
+- id: cors
+  name: WHATWG Fetch / CORS
+  conforms: true
+  evidence: >-
+    Access-Control-Allow-Headers and Access-Control-Expose-Headers returned on /wp-json responses;
+    pagination headers are readable by browser clients cross-origin.
+- id: rfc9457
+  name: RFC 9457 Problem Details
+  conforms: false
+  evidence: >-
+    Errors are the WordPress envelope {code, message, data:{status,...}} served as application/json.
+    No `type` URI and no application/problem+json media type on any observed 4xx. See
+    errors/nikang-therapeutics-problem-types.yml.
+- id: idempotency
+  name: Idempotency keys
+  conforms: false
+  evidence: >-
+    No Idempotency-Key header and no request-deduplication contract. Recorded as `na` rather than a
+    failure in conventions/nikang-therapeutics-conventions.yml, because the anonymous surface is
+    read-only and there is no write to make idempotent.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: false
+  evidence: >-
+    No oauth2 securityScheme in any spec; /.well-known/oauth-authorization-server and
+    /.well-known/oauth-protected-resource both 404 on www.nikangtx.com and nikangtx.com. The
+    /wp-json index reports an empty `authentication` array.
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  evidence: '/.well-known/openid-configuration returned 404 on both hosts on 2026-08-26.'
+- id: scim
+  name: SCIM 2.0
+  conforms: false
+  evidence: No urn:ietf:params:scim:schemas URN and no /scim/v2 route in the 210-route index.
+- id: odata
+  name: OData
+  conforms: false
+  evidence: No $metadata surface and no OData query conventions in the route index.
+- id: json-api
+  name: JSON:API
+  conforms: false
+  evidence: >-
+    Responses are bare JSON objects/arrays with a WordPress `_links` block, not a JSON:API
+    data/attributes/relationships document, and the media type is application/json.
+- id: asyncapi
+  name: AsyncAPI / event surface
+  conforms: false
+  evidence: >-
+    No webhook registration route, no event catalog and no streaming endpoint in the 210-route index;
+    /asyncapi.yaml 404s. There is no event surface to describe, so no AsyncAPI or Webhooks pointer is
+    emitted.
+domain_standard:
+  applicable: true
+  regime: healthcare / life sciences
+  regime_standards_checked: [fhir, smart-on-fhir, us-core, uscdi, da-vinci, carin-blue-button, fhir-bulk-data, cds-hooks, c-cda, hl7-v2, dicom, cdisc-sdtm, cdisc-odm]
+  declared: false
+  evidence: >-
+    None of these appears anywhere in the contract. There is no /fhir route, no CapabilityStatement,
+    no FHIR resource type, no HL7 message shape and no CDISC ODM/SDTM surface in the 210-route index,
+    and none is referenced on www.nikangtx.com. This is the expected result and is NOT a deficiency:
+    NiKang Therapeutics is a pre-commercial small-molecule drug discovery company that runs no
+    clinical-data exchange, no patient-facing service and no health-data API. The regime is matched by
+    the life-sciences tags on this profile, not by any health-data surface NiKang operates. Reward-only
+    — recorded as absent, not failed.
+  best_fit_declared_standard: oembed-1.0
+  best_fit_note: >-
+    The one domain standard this contract does declare for its own market is oEmbed 1.0 for the
+    content-publishing surface it actually is. That is recorded above with live evidence.
+certifications:
+  published: false
+  detail: >-
+    No SOC 2, ISO 27001, HIPAA, PCI or FedRAMP claim is published on www.nikangtx.com, and no trust
+    center exists — confirmed by 0-working/probe-security-programs.py on 2026-08-26 (vdp=none,
+    trust=none). No `Compliance` pointer is therefore emitted.
+cross_links:
+  conventions: conventions/nikang-therapeutics-conventions.yml
+  errors: errors/nikang-therapeutics-problem-types.yml
+  authentication: authentication/nikang-therapeutics-authentication.yml
+  security: security/nikang-therapeutics-domain-security.yml

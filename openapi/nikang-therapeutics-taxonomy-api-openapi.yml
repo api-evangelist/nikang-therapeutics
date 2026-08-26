@@ -1,0 +1,564 @@
+openapi: 3.2.0
+info:
+  title: NiKang Therapeutics Taxonomy API
+  version: wp/v2
+  summary: Categories, tags and team categories.
+  description: The read-only content surface NiKang Therapeutics exposes at https://www.nikangtx.com/wp-json. NiKang
+    Therapeutics is a clinical-stage biotechnology company in Wilmington, Delaware, founded in 2017, discovering
+    small molecule oncology medicines against difficult-to-drug targets (HIF2α, CDK2, CDK2/4, KRAS G12D) by structure-based
+    drug design. It runs no developer program and markets no product API. This document covers the three anonymously
+    readable term collections on the deployment plus the taxonomy registry itself.
+  contact:
+    name: NiKang Therapeutics
+    url: https://www.nikangtx.com/
+    email: info@nikangtx.com
+  license:
+    name: All rights reserved — content is NiKang Therapeutics'; this description is an API Evangelist derivation.
+    url: https://www.nikangtx.com/terms-of-use/
+  termsOfService: https://www.nikangtx.com/terms-of-use/
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route
+    index at https://www.nikangtx.com/wp-json/ (210 routes across 17 namespaces) and verified against live anonymous
+    responses on 2026-08-26. Every query parameter below appears verbatim in that route index''s `args` block for
+    the endpoint it is attached to, and every collection count quoted in a description was read from the `X-WP-Total`
+    response header on that date. NiKang Therapeutics publishes no OpenAPI, no developer portal, no API reference
+    and no developer program; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines
+    the wp/v2 contract. The deployment is WP Engine behind Cloudflare, the theme is The7, and every /wp-json response
+    carries `x-robots-tag: noindex`. Routes that returned 401 anonymously (/wp/v2/users, /wp/v2/settings, /wp/v2/block-types,
+    wp-abilities/v1, wp-site-health/v1) and every write method are deliberately excluded. Nothing here was obtained
+    with credentials.'
+servers:
+- url: https://www.nikangtx.com/wp-json
+  description: Production content API (WP Engine origin behind Cloudflare)
+tags:
+- name: taxonomy
+  description: Terms and taxonomy registry.
+paths:
+  /wp/v2/categories:
+    get:
+      tags:
+      - taxonomy
+      operationId: listCategories
+      summary: List categories terms
+      description: 'Post categories. Three registered on 2026-08-26: `news` (16 posts), `timeline` (0) and `uncategorized`
+        (0).'
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+        description: Sort collection by term attribute.
+      - name: hide_empty
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: Whether to hide terms not assigned to any posts.
+      - name: parent
+        in: query
+        schema:
+          type: integer
+        description: Limit result set to terms assigned to a specific parent.
+      - name: post
+        in: query
+        schema:
+          type: integer
+        description: Limit result set to terms assigned to a specific post.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to terms with one or more specific slugs.
+      - $ref: '#/components/parameters/Fields'
+      - $ref: '#/components/parameters/Embed'
+      responses:
+        '200':
+          description: A page of terms.
+          headers:
+            X-WP-Total: &id001
+              description: Total number of matching items.
+              schema:
+                type: integer
+            X-WP-TotalPages: &id002
+              description: Total number of pages available at the current per_page.
+              schema:
+                type: integer
+            Link: &id003
+              description: RFC 8288 Link header carrying rel="next" and rel="prev".
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Term'
+        '400': &id004
+          description: 'Invalid parameter. Observed verbatim on per_page=200: rest_invalid_param with a per-parameter
+            details block.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/categories/{id}:
+    get:
+      tags:
+      - taxonomy
+      operationId: getCategory
+      summary: Get a single categories term
+      parameters:
+      - $ref: '#/components/parameters/ResourceId'
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A single term.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Term'
+        '404': &id005
+          description: No route matched, or the resource id does not exist (rest_no_route / rest_post_invalid_id).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /wp/v2/tags:
+    get:
+      tags:
+      - taxonomy
+      operationId: listTags
+      summary: List tags terms
+      description: 'The post_tag taxonomy. Registered and anonymously reachable, but empty — X-WP-Total: 0 on 2026-08-26.'
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+        description: Sort collection by term attribute.
+      - name: hide_empty
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: Whether to hide terms not assigned to any posts.
+      - name: post
+        in: query
+        schema:
+          type: integer
+        description: Limit result set to terms assigned to a specific post.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to terms with one or more specific slugs.
+      - $ref: '#/components/parameters/Fields'
+      - $ref: '#/components/parameters/Embed'
+      responses:
+        '200':
+          description: A page of terms.
+          headers:
+            X-WP-Total: *id001
+            X-WP-TotalPages: *id002
+            Link: *id003
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Term'
+        '400': *id004
+  /wp/v2/tags/{id}:
+    get:
+      tags:
+      - taxonomy
+      operationId: getTag
+      summary: Get a single tags term
+      parameters:
+      - $ref: '#/components/parameters/ResourceId'
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A single term.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Term'
+        '404': *id005
+  /wp/v2/dt_team_category:
+    get:
+      tags:
+      - taxonomy
+      operationId: listTeamCategories
+      summary: List dt_team_category terms
+      description: 'Team categories used by the dt_team type. Two registered: Board (7) and Officers (2).'
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ensure result set excludes specific IDs.
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Limit result set to specific IDs.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+        description: Sort collection by term attribute.
+      - name: hide_empty
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: Whether to hide terms not assigned to any posts.
+      - name: parent
+        in: query
+        schema:
+          type: integer
+        description: Limit result set to terms assigned to a specific parent.
+      - name: post
+        in: query
+        schema:
+          type: integer
+        description: Limit result set to terms assigned to a specific post.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to terms with one or more specific slugs.
+      - $ref: '#/components/parameters/Fields'
+      - $ref: '#/components/parameters/Embed'
+      responses:
+        '200':
+          description: A page of terms.
+          headers:
+            X-WP-Total: *id001
+            X-WP-TotalPages: *id002
+            Link: *id003
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Term'
+        '400': *id004
+  /wp/v2/dt_team_category/{id}:
+    get:
+      tags:
+      - taxonomy
+      operationId: getTeamCategory
+      summary: Get a single dt_team_category term
+      parameters:
+      - $ref: '#/components/parameters/ResourceId'
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A single term.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Term'
+        '404': *id005
+  /wp/v2/taxonomies:
+    get:
+      tags:
+      - taxonomy
+      operationId: listTaxonomies
+      summary: List registered taxonomies
+      description: 'Returns every registered taxonomy keyed by slug. Five are registered: category, post_tag, nav_menu,
+        wp_pattern_category and dt_team_category.'
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - name: type
+        in: query
+        description: Limit results to taxonomies associated with a specific post type.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A map of taxonomies.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Taxonomy'
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      tags:
+      - taxonomy
+      operationId: getTaxonomy
+      summary: Get one taxonomy
+      parameters:
+      - name: taxonomy
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A single taxonomy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Taxonomy'
+        '404': *id005
+components:
+  parameters:
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in response. Anonymously only
+        `view` and `embed` return data — `edit` requires an authenticated user.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in result set. Values above 100 return 400 rest_invalid_param;
+        the bound is not clamped.
+      schema:
+        type: integer
+        default: 10
+        minimum: 1
+        maximum: 100
+    Fields:
+      name: _fields
+      in: query
+      description: Comma-separated allow-list of top-level response fields to return.
+      schema:
+        type: string
+    Embed:
+      name: _embed
+      in: query
+      description: Inline embeddable resources (author, featured media, terms) under _embedded.
+      schema:
+        type: string
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the resource.
+      schema:
+        type: integer
+  schemas:
+    Term:
+      type: object
+      description: A taxonomy term.
+      properties:
+        id:
+          type: integer
+        count:
+          type: integer
+          description: Number of published objects assigned this term.
+        description:
+          type: string
+        link:
+          type: string
+          format: uri
+        name:
+          type: string
+        slug:
+          type: string
+        taxonomy:
+          type: string
+        parent:
+          type: integer
+          description: Hierarchical taxonomies only.
+        meta:
+          type: object
+        _links:
+          type: object
+    Taxonomy:
+      type: object
+      description: A registered taxonomy.
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        types:
+          type: array
+          items:
+            type: string
+        hierarchical:
+          type: boolean
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        visibility:
+          type: object
+        _links:
+          type: object
+    Error:
+      type: object
+      description: WordPress REST error envelope. Not RFC 9457 problem+json — there is no `type` URI and the media
+        type is application/json.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_invalid_param, rest_post_invalid_id, rest_no_route,
+            rest_forbidden.
+        message:
+          type: string
+          description: Human-readable message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code, repeated in the body.
+            params:
+              type: object
+              additionalProperties:
+                type: string
+              description: Per-parameter validation messages (400 only).
+            details:
+              type: object
+              description: Per-parameter structured detail with its own code/message (400 only).
+      required:
+      - code
+      - message
+      - data

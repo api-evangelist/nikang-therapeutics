@@ -1,0 +1,92 @@
+# NiKang Therapeutics
+
+> Clinical-stage biotechnology company in Wilmington, Delaware, founded 2017, discovering small
+> molecule oncology medicines against difficult-to-drug targets — HIF2alpha, CDK2, CDK2/4 and KRAS
+> G12D — using structure-based drug design across both inhibitor and targeted-protein-degradation
+> modalities.
+
+NiKang Therapeutics runs no developer program. It publishes no product API, no developer portal, no
+API reference and no machine-readable specification of its own. https://www.nikangtx.com/llms.txt
+returns 404; this file is an API Evangelist generation, not a NiKang publication.
+
+The only machine-readable surface reachable without credentials is the WordPress REST content API at
+https://www.nikangtx.com/wp-json — 210 registered routes across 17 namespaces, of which the
+anonymously readable read-only content families are described in this repository's openapi/ directory.
+It is free, needs no key, and returns JSON.
+
+## What you can actually call
+
+Base URL: https://www.nikangtx.com/wp-json — no authentication, no signup, no quota.
+
+- Search everything: `GET /wp/v2/search?search=<term>&subtype=any` — the only cross-type call.
+- News archive: `GET /wp/v2/posts` — 16 published posts (press releases, clinical data, presentations).
+- Corporate pages: `GET /wp/v2/pages` — 9 pages including science-and-pipeline and about-us.
+- Board and officers: `GET /wp/v2/dt_team` — 10 people, categorised Board (7) / Officers (2).
+- Media assets: `GET /wp/v2/media` — 67 attachments with direct source_url values.
+- Categories: `GET /wp/v2/categories` — 3 registered; only `news` (16 posts) is non-empty.
+- Route index: `GET /wp-json` — the full self-describing 210-route table.
+
+Paginate with `page` and `per_page` (max 100 — 101 or more returns HTTP 400, it is not clamped).
+Read totals from the `X-WP-Total` and `X-WP-TotalPages` response headers. Trim payloads with
+`_fields`, inline related objects with `_embed`.
+
+Errors are the WordPress envelope `{code, message, data:{status}}` as application/json — NOT RFC 9457
+problem+json. Branch on `code`, never on `message`.
+
+There are no rate-limit headers. Send a real browser User-Agent, honour the `Crawl-delay: 10` in
+robots.txt, and respect the advertised `max-age=600` cache window — a non-browser User-Agent was served
+a Cloudflare HTML challenge during profiling. If a response body is HTML, it is an edge challenge, not
+an API error: the WordPress envelope always carries a `code` field.
+
+`/wp/v2/users` returns 401, so the integer `author` id on a post cannot be resolved to a name. Use
+`/wp/v2/dt_team` for NiKang's named people instead.
+
+## Company
+
+- Website: https://www.nikangtx.com/
+- About us: https://www.nikangtx.com/about-us/
+- Science & Pipeline: https://www.nikangtx.com/science-and-pipeline/
+- News: https://www.nikangtx.com/news/ (RSS: https://www.nikangtx.com/feed/)
+- Careers: https://www.nikangtx.com/careers/
+- Jobs: https://www.nikangtx.com/jobs/
+- Privacy Policy: https://www.nikangtx.com/privacy-policy-statement/
+- Terms of Use: https://www.nikangtx.com/terms-of-use/
+- LinkedIn: https://www.linkedin.com/company/nikang-therapeutics-inc
+- Headquarters: 200 Powder Mill Road, Building E500, Wilmington, DE 19803
+- General enquiries: info@nikangtx.com — this is not a developer support channel.
+
+## Pipeline
+
+- NKT2152 — orally bioavailable allosteric HIF2alpha inhibitor. Phase 1/2 in clear cell renal cell
+  carcinoma, VHL disease and other solid tumours.
+- NKT3964 — first-in-class selective CDK2 degrader. Phase 1 in advanced or metastatic solid tumours.
+- NKT5097 — first-in-class dual CDK2/4 degrader. Phase 1 in advanced or metastatic solid tumours.
+- KRAS G12D — small molecule programme in discovery / IND-enabling work.
+
+Partnerships: Erasca (SHP2, 2020), Pfizer (HIF2, 2021), Hansoh (HIF2, 2022), Roche (HIF2, 2023).
+Funding: $10M Series A (Dec 2017), $50M Series B (Sep 2020), $200M Series C (May 2021).
+
+## Machine-readable artifacts in this profile
+
+- openapi/ — nine derived OpenAPI 3.2.0 documents, 26 operations
+- overlays/nikang-therapeutics-content-overlay.yaml — what API Evangelist added on top of the route index
+- authentication/nikang-therapeutics-authentication.yml — anonymous read; the 401 boundary
+- conventions/nikang-therapeutics-conventions.yml — pagination, errors, caching, reversibility (na)
+- errors/nikang-therapeutics-problem-types.yml — 7 error codes captured live
+- data-model/nikang-therapeutics-data-model.yml — 10 entities, 11 relationships
+- conformance/nikang-therapeutics-conformance.yml — oEmbed 1.0, RFC 8288, sitemaps 0.9 confirmed
+- lifecycle/nikang-therapeutics-lifecycle.yml — no versioning policy, no SLA, no status page
+- rate-limits/nikang-therapeutics-rate-limits.yml — limit_count 0; the edge control is unsignalled
+- plans/nikang-therapeutics-plans-pricing.yml — plan_count 0; nothing is for sale
+- packages/nikang-therapeutics-packages.yml — no SDKs; npm/PyPI/GitHub all probed empty
+- mcp/nikang-therapeutics-mcp.yml — no MCP server exists; a candidate tool list only
+- well-known/nikang-therapeutics-well-known.yml — every /.well-known path 404s on both hosts
+- security/nikang-therapeutics-domain-security.yml — TLS 1.3, no HSTS, no CAA, DMARC p=reject
+- skills/ — three Agent Skills grounded in real operationIds
+
+## Not present
+
+No OpenAPI published by NiKang. No GraphQL, no gRPC, no SOAP/WSDL, no AsyncAPI, no webhooks, no
+events. No MCP server. No A2A agent card — every /.well-known/agent-card.json and
+/.well-known/agent.json probe returned 404. No SDKs, no CLI, no Postman collection, no GitHub
+organisation. No status page, no changelog, no deprecation policy, no SLA. No pricing and no plans.
