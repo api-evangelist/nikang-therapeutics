@@ -16,6 +16,18 @@ description: >-
   specification of its own. The only machine-readable surface reachable without credentials is the WordPress
   REST content API behind www.nikangtx.com, which is catalogued here — 210 registered routes across 17
   namespaces, of which the anonymously readable read-only content families are described in openapi/.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://www.nikangtx.com/wp-content/uploads/2023/10/nikang-logo-footer.png
 url: https://raw.githubusercontent.com/api-evangelist/nikang-therapeutics/refs/heads/main/apis.yml
 x-type: company
