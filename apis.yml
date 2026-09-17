@@ -103,8 +103,8 @@ apis:
 - aid: nikang-therapeutics:nikang-therapeutics-pages-api
   name: NiKang Therapeutics Pages API
   description: >-
-    Corporate pages — about us, science and pipeline, news, careers, jobs, privacy policy and terms of use.
-    Nine pages published at harvest time.
+    Corporate pages — about us, science and pipeline, news, careers, jobs, privacy policy and terms of
+    use. Nine pages published at harvest time.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://www.nikangtx.com/wp-json
   tags:
@@ -183,8 +183,8 @@ apis:
   name: NiKang Therapeutics Taxonomy API
   description: >-
     Categories, tags and team categories, plus the taxonomy registry. Three post categories are registered
-    (`news` with 16 posts, `timeline` and `uncategorized` both empty); the post_tag taxonomy is registered but
-    empty; dt_team_category holds Board and Officers.
+    (`news` with 16 posts, `timeline` and `uncategorized` both empty); the post_tag taxonomy is registered
+    but empty; dt_team_category holds Board and Officers.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://www.nikangtx.com/wp-json
   tags:
@@ -209,8 +209,8 @@ apis:
 - aid: nikang-therapeutics:nikang-therapeutics-search-api
   name: NiKang Therapeutics Search API
   description: >-
-    Cross-content search across every published object — posts, pages, dt_team members and terms — in one
-    call. Returned six matches for `cdk2` at harvest time.
+    Cross-content search across every published object — posts, pages, dt_team members and terms — in
+    one call. Returned six matches for `cdk2` at harvest time.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://www.nikangtx.com/wp-json
   tags:
@@ -235,9 +235,8 @@ apis:
 - aid: nikang-therapeutics:nikang-therapeutics-discovery-api
   name: NiKang Therapeutics Discovery API
   description: >-
-    Route, post-type, taxonomy and status discovery documents. The /wp-json index publishes the full
-    210-route table across 17 namespaces and is the machine-readable contract this whole profile was
-    derived from.
+    Route, post-type, taxonomy and status discovery documents. The /wp-json index publishes the full 210-route
+    table across 17 namespaces and is the machine-readable contract this whole profile was derived from.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://www.nikangtx.com/wp-json
   tags:
@@ -285,22 +284,16 @@ apis:
     url: data-model/nikang-therapeutics-data-model.yml
   - type: RateLimits
     url: rate-limits/nikang-therapeutics-rate-limits.yml
-- aid: nikang-therapeutics:nikang-therapeutics-oembed-api
-  name: NiKang Therapeutics oEmbed API
-  description: >-
-    oEmbed 1.0 provider endpoint for www.nikangtx.com URLs. Verified live and anonymous — returns
-    provider_name "Nikang Therapeutics" for the site root.
-  humanURL: https://oembed.com/
+- aid: nikang-therapeutics:nikang-therapeutics-o-embed-api
+  name: NiKang Therapeutics o Embed API
+  description: oEmbed 1.0 provider.
+  humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://www.nikangtx.com/wp-json
   tags:
-  - oEmbed
-  tags_raw:
-  - oembed
+  - o Embed
   properties:
   - type: OpenAPI
-    url: openapi/nikang-therapeutics-oembed-api-openapi.yml
-  - type: Overlay
-    url: overlays/nikang-therapeutics-content-overlay.yaml
+    url: openapi/nikang-therapeutics-o-embed-api-openapi.yml
   - type: Authentication
     url: authentication/nikang-therapeutics-authentication.yml
   - type: ErrorCatalog
