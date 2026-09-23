@@ -1,0 +1,34 @@
+{
+  "provider": "nikang-therapeutics",
+  "sources": [
+    "nikang-therapeutics-comments-api-openapi.yml",
+    "nikang-therapeutics-discovery-api-openapi.yml",
+    "nikang-therapeutics-media-api-openapi.yml",
+    "nikang-therapeutics-o-embed-api-openapi.yml",
+    "nikang-therapeutics-pages-api-openapi.yml",
+    "nikang-therapeutics-posts-api-openapi.yml",
+    "nikang-therapeutics-search-api-openapi.yml",
+    "nikang-therapeutics-taxonomy-api-openapi.yml",
+    "nikang-therapeutics-team-api-openapi.yml"
+  ],
+  "outputs": [
+    "nikang-therapeutics-comments-api-openapi.yml",
+    "nikang-therapeutics-discovery-api-openapi.yml",
+    "nikang-therapeutics-media-api-openapi.yml",
+    "nikang-therapeutics-o-embed-api-openapi.yml",
+    "nikang-therapeutics-pages-api-openapi.yml",
+    "nikang-therapeutics-posts-api-openapi.yml",
+    "nikang-therapeutics-search-api-openapi.yml",
+    "nikang-therapeutics-taxonomy-api-openapi.yml",
+    "nikang-therapeutics-team-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [
+    "no openapi/_original/ archive: this run re-split PREVIOUSLY REFINED output, so any base URL it carries is inherited from an earlier pass rather than read from a document the provider published"
+  ],
+  "notes": [
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}
