@@ -1,33 +1,31 @@
-# Kin Score artifact — nikang-therapeutics — 2026-08-27T094438
+# Kin Score artifact — nikang-therapeutics — 2026-09-24T064009
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: nikang-therapeutics
-  schema_version: 0.15.1
-  scored_at: '2026-08-27'
-  run_ts: 2026-08-27T094438
-  composite: 33.2
-  band: thin
+  schema_version: 0.22.0
+  scored_at: '2026-09-24'
+  run_ts: 2026-09-24T064009
+  composite: 21.7
+  band: emerging
   facets:
-    discoverability: 81.5
-    contract_quality: 48.5
-    governance: 12.1
+    discoverability: 66.7
+    contract_quality: 6.7
+    contract_governance: 0.0
     operational_transparency: 0.0
-    developer_ergonomics: 13.7
-    commercial_clarity: 21.1
-    contract_governance: 12.1
+    developer_ergonomics: 23.2
     access_clarity: 21.1
   agent_readiness:
-    score: 25.5
+    score: 10.2
     band: agent-aware
     dimensions:
-      spec_presence: true
+      spec_presence: false
       agentic_access: false
-      reversibility_documented: false
-      mcp_server: documented
+      reversibility_documented: na
+      mcp_server: false
       auth_clarity: bearer
-      idempotency: false
-      error_semantics: verified
+      idempotency: na
+      error_semantics: documented
       openapi_examples: false
       rate_limit_signal: documented
       event_surface_described: false
@@ -35,7 +33,7 @@ kin_score:
       well_known_catalog: false
       consent_identity: false
       agent_card: false
-      dry_run_mode: false
+      dry_run_mode: na
       delegated_identity: false
       protected_resource_metadata: false
       dynamic_client_registration: false
