@@ -2,11 +2,11 @@
   "repo": "nikang-therapeutics",
   "feeds": [
     {
-      "source": "https://www.nikangtx.com/news/",
-      "feed_url": "https://www.nikangtx.com/news/feed/",
+      "source": "https://www.nikangtx.com/feed/",
+      "feed_url": "https://www.nikangtx.com/feed/",
       "title": "",
       "saved": 0,
-      "method": "discovered"
+      "method": "feed"
     },
     {
       "source": "https://www.nikangtx.com/news/feed/",
@@ -14,15 +14,8 @@
       "title": "",
       "saved": 0,
       "method": "feed"
-    },
-    {
-      "source": "https://www.nikangtx.com/feed/",
-      "feed_url": "https://www.nikangtx.com/feed/",
-      "title": "",
-      "saved": 0,
-      "method": "feed"
     }
   ],
   "post_count": 9,
-  "fetched": "2026-10-03T12:30:02Z"
+  "fetched": "2026-10-10T13:15:00Z"
 }
