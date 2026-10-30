@@ -1,4 +1,4 @@
-# Nikang Therapeutics
+# NiKang Therapeutics
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,22 +64,110 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-NiKang Therapeutics is a clinical-stage biotechnology company in Wilmington, Delaware, founded in 2017,
-discovering small molecule oncology medicines against difficult-to-drug targets — HIF2alpha (NKT2152),
-CDK2 (NKT3964), CDK2/4 (NKT5097) and KRAS G12D — using structure-based drug design across both
-inhibitor and targeted-protein-degradation modalities.
+NiKang Therapeutics is a clinical-stage biotechnology company headquartered at 200 Powder Mill Road, Building E500, Wilmington, Delaware, founded in 2017 to discover and develop innovative small molecule medicines that help patients fight cancer. The company works from deep insights into disease biology and molecular pathways and applies structure-based drug design to targets long considered difficult to drug, spanning both inhibitor and targeted-protein-degradation modalities. Its lead programme, NKT2152, is an orally bioavailable allosteric HIF2alpha inhibitor in Phase 1/2 for clear cell renal cell carcinoma, VHL disease and other solid tumours; NKT3964 is a first-in-class selective CDK2 degrader in Phase 1 for advanced or metastatic solid tumours; NKT5097 is a first-in-class dual CDK2/4 degrader, also in Phase 1; and a KRAS G12D small molecule programme sits in discovery and IND-enabling work. NiKang raised a $10 million Series A in December 2017, a $50 million Series B in September 2020 and a $200 million Series C in May 2021, and has partnered its chemistry with Erasca on SHP2 and with Pfizer, Hansoh and Roche on HIF2. NiKang Therapeutics runs no developer program and publishes no product API, developer portal, API reference or machine-readable specification of its own. The only machine-readable surface reachable without credentials is the WordPress REST content API behind www.nikangtx.com, which is catalogued here — 210 registered routes across 17 namespaces, of which the anonymously readable read-only content families are described in openapi/.
 
-**NiKang Therapeutics runs no developer program.** It publishes no product API, developer portal, API
-reference or machine-readable specification of its own. The only machine-readable surface reachable
-without credentials is the WordPress REST content API behind `www.nikangtx.com` — 210 registered routes
-across 17 namespaces — and that is what this profile catalogues: nine derived OpenAPI 3.2.0 documents
-covering 26 anonymously readable read-only operations, plus the semantics, errors, data model,
-conformance and security posture observed live on 2026-08-26.
+**Areas:** Company · Biotechnology · Pharmaceuticals · Oncology · Precision Medicine · Drug Discovery · Targeted Protein Degradation · Clinical Trials · Life Sciences · content-api
 
-Probed and found absent on that date: OpenAPI published by the company, GraphQL, gRPC, SOAP/WSDL,
-AsyncAPI, webhooks, an MCP server, an A2A agent card, SDKs, a CLI, a status page, a changelog, a
-deprecation policy, and any pricing or plans. Every `/.well-known/` path returns 404 on both hosts.
+## NiKang Therapeutics on APIs.io
 
-- https://www.nikangtx.com/
-- https://www.nikangtx.com/science-and-pipeline/
-- https://forgeglobal.com/nikang-therapeutics_stock/
+Everything profiled for NiKang Therapeutics is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/nikang-therapeutics/](https://apis.io/providers/nikang-therapeutics/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [NiKang Therapeutics Website (WordPress REST)](https://apis.io/apis/nikang-therapeutics/nikangtx-com-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the NiKang Therapeutics website at www.nikangtx.com: the route index of the site's content management system,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [nikang-therapeutics-content](https://apis.io/servers/nikang-therapeutics/nikang-therapeutics-content/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Nikang Therapeutics Content Overlay](https://apis.io/overlays/nikang-therapeutics/nikang-therapeutics-content-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Nikang Therapeutics Authentication](https://apis.io/security/nikang-therapeutics/nikang-therapeutics-authentication/)
+- [Nikang Therapeutics Domain Security](https://apis.io/security/nikang-therapeutics/nikang-therapeutics-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Nikang Therapeutics Plans Pricing](https://apis.io/plans/nikang-therapeutics/nikang-therapeutics-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Nikang Therapeutics Rate Limits](https://apis.io/rate-limits/nikang-therapeutics/nikang-therapeutics-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.nikangtx.com/)
+- [Terms of service](https://www.nikangtx.com/terms-of-use/)
+- [Privacy policy](https://www.nikangtx.com/privacy-policy-statement/)
+
+## API Evangelist rating
+
+**Kin Score 17.2** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 65.2 |
+| Contract quality | 0.0 |
+| Contract governance | 0.0 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 23.2 |
+| Access clarity | 21.1 |
+
+**Agent readiness 6.7** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 24.2** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/nikang-therapeutics/](https://apis.io/providers/nikang-therapeutics/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for NiKang Therapeutics: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/nikang-therapeutics/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
